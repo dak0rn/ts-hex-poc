@@ -1,5 +1,5 @@
 import test from 'ava';
-import Utils from '../../shared/Utils';
+import Utils from '@internal/shared/Utils';
 
 test('Utils.getDeep returns null with empty path', t => {
     t.plan(1);
