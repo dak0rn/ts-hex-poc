@@ -1,6 +1,6 @@
 import test from 'ava';
 import sinon from 'sinon';
-import Module, { MissingModuleException, MissingModulePathException } from '@internal/lib/Module';
+import Module, { MissingModuleException, MissingModulePathException } from '@internal/module/Module';
 
 const DummyModule = {
     getClass(): { new (...args: any[]): any } {
