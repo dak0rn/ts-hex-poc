@@ -1,6 +1,7 @@
 import ConfigurationAdapter from './ConfigurationAdapter';
 import Configuration, { InvalidConfigurationException } from './Configuration';
 import Utils from '@internal/shared/Utils';
+import path from 'path';
 
 export interface RawConfiguration {
     [key: string]: any;
@@ -91,5 +92,21 @@ export default class SystemConfiguration extends Configuration {
      */
     log(): string {
         return this.config.log;
+    }
+
+    /**
+     * Resolves the value for the given key relative to {@link applicationPath}.
+     * Respects absolute paths.
+     *
+     * Does not check for types from values return, so it will break for non-strings.
+     *
+     * @param {string} key Path as used with {@link Configuration#get}
+     */
+    resolvePathForKey(key: string): string {
+        const value = this.get(key);
+
+        if (path.isAbsolute(value)) return value;
+
+        return path.resolve(this.applicationPath, value);
     }
 }

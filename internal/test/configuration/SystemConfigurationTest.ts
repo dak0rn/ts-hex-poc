@@ -207,14 +207,50 @@ test('SystemConfiguration.environment returns the given environments: developmen
 test('SystemConfiguration.log returns the set logger', (t: ExecutionContext) => {
     t.plan(1);
 
-    let valid = {
+    const valid = {
         moduleFolder: 'test',
         modules: ['web', 'database', 'testing'],
         environment: 'production',
         log: 'winston'
     };
 
-    let sc = new SystemConfiguration(valid, new StubAdapter(''));
+    const sc = new SystemConfiguration(valid, new StubAdapter(''));
 
     t.is(sc.log(), 'winston');
+});
+
+/// SystemConfiguration.resolvePathForKey
+
+test('SystemConfiguration.resolvePathForKey returns an absolute path as is', t => {
+    t.plan(1);
+
+    const valid = {
+        moduleFolder: 'test',
+        modules: ['web', 'database', 'testing'],
+        environment: 'production',
+        log: 'winston',
+        target: '/usr/share/config.yaml'
+    };
+
+    const sc = new SystemConfiguration(valid, new StubAdapter(''));
+    sc.applicationPath = '/tmp';
+
+    t.is(sc.resolvePathForKey('target'), '/usr/share/config.yaml');
+});
+
+test('SystemConfiguration.resolvePathForKey returns a relative path resolved to applicationPath', t => {
+    t.plan(1);
+
+    const valid = {
+        moduleFolder: 'test',
+        modules: ['web', 'database', 'testing'],
+        environment: 'production',
+        log: 'winston',
+        target: 'a'
+    };
+
+    const sc = new SystemConfiguration(valid, new StubAdapter(''));
+    sc.applicationPath = '/tmp';
+
+    t.is(sc.resolvePathForKey('target'), '/tmp/a');
 });

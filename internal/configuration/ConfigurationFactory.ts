@@ -15,6 +15,7 @@ export class MissingAdapterException extends Error {
  * Factory class for configuration adapters
  */
 export default class ConfigurationFactory {
+    /* istanbul ignore next */
     private constructor() {}
 
     /**
