@@ -2,6 +2,7 @@
  * Static utility class
  */
 export default class Utils {
+    /* istanbul ignore next */
     private constructor() {}
 
     /**
