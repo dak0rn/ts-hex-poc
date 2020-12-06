@@ -134,7 +134,6 @@ test("Module.getClass calls module's getClass()", t => {
     }
 
     const localDummy = Object.assign({}, DummyModule);
-    const registry = new RegistryStub();
     const spy = sinon.stub(localDummy, 'getClass').returns(RegistryStub);
 
     const m = new Module();
