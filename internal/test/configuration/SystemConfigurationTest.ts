@@ -1,7 +1,7 @@
 import ApplicationConfiguration from '@internal/configuration/ApplicationConfiguration';
 import { InvalidConfigurationException } from '@internal/configuration/Configuration';
 import ConfigurationAdapter from '@internal/configuration/ConfigurationAdapter';
-import SystemConfiguration from '@internal/configuration/SystemConfiguration';
+import SystemConfiguration, { ExecutionEnvironment } from '@internal/configuration/SystemConfiguration';
 import test, { ExecutionContext } from 'ava';
 
 class StubAdapter extends ConfigurationAdapter {
@@ -168,4 +168,53 @@ test('SystemConfiguration.modules returns the module list from the configuration
     const sc = new SystemConfiguration(valid, new StubAdapter(''));
 
     t.deepEqual(sc.modules(), valid.modules);
+});
+
+/// SystemConfiguration.environment
+
+test('SystemConfiguration.environment returns the given environments: production', (t: ExecutionContext) => {
+    t.plan(1);
+
+    let valid = {
+        moduleFolder: 'test',
+        modules: ['web', 'database', 'testing'],
+        environment: 'production',
+        log: 'winston'
+    };
+
+    let sc = new SystemConfiguration(valid, new StubAdapter(''));
+
+    t.is(sc.environment(), ExecutionEnvironment.Production);
+});
+
+test('SystemConfiguration.environment returns the given environments: development', (t: ExecutionContext) => {
+    t.plan(1);
+
+    let valid = {
+        moduleFolder: 'test',
+        modules: ['web', 'database', 'testing'],
+        environment: 'development',
+        log: 'winston'
+    };
+
+    let sc = new SystemConfiguration(valid, new StubAdapter(''));
+
+    t.is(sc.environment(), ExecutionEnvironment.Development);
+});
+
+/// SystemConfiguration.log
+
+test('SystemConfiguration.log returns the set logger', (t: ExecutionContext) => {
+    t.plan(1);
+
+    let valid = {
+        moduleFolder: 'test',
+        modules: ['web', 'database', 'testing'],
+        environment: 'production',
+        log: 'winston'
+    };
+
+    let sc = new SystemConfiguration(valid, new StubAdapter(''));
+
+    t.is(sc.log(), 'winston');
 });

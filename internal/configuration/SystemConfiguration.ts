@@ -6,6 +6,13 @@ export interface RawConfiguration {
     [key: string]: any;
 }
 
+export const enum ExecutionEnvironment {
+    Production = 'production',
+    Development = 'development'
+}
+
+const validEnvironments = [ExecutionEnvironment.Production, ExecutionEnvironment.Development];
+
 /**
  * Provides access to the configuration for the application server
  */
@@ -39,7 +46,7 @@ export default class SystemConfiguration extends Configuration {
             throw new InvalidConfigurationException('Configuration does not have `log` set');
         }
 
-        if (!c.hasOwnProperty('environment') || !['production', 'development'].includes(c.environment)) {
+        if (!c.hasOwnProperty('environment') || !validEnvironments.includes(c.environment)) {
             throw new InvalidConfigurationException(`Invalid value for system.environment: ${c.environment}`);
         }
 
@@ -66,5 +73,23 @@ export default class SystemConfiguration extends Configuration {
      */
     modules(): string[] {
         return this.config.modules;
+    }
+
+    /**
+     * Returns the environment the application is running in
+     *
+     * @return {string} Environment
+     */
+    environment(): ExecutionEnvironment {
+        return this.config.environment;
+    }
+
+    /**
+     * Returns the name of the logger from the configuration
+     *
+     * @return {string} Name of the logger
+     */
+    log(): string {
+        return this.config.log;
     }
 }
