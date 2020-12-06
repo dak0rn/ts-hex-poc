@@ -1,11 +1,8 @@
 import test from 'ava';
 import sinon from 'sinon';
 import Module, { MissingModuleException, MissingModulePathException } from '@internal/lib/Module';
-import { ApplicationModuleRegistry } from '@internal/types/modules';
 
 const DummyModule = {
-    registerProjectMatchers(registry: ApplicationModuleRegistry): void {},
-
     getClass(): { new (...args: any[]): any } {
         return class {};
     }
@@ -90,51 +87,15 @@ test('Module.load throws if loader throws', t => {
     t.throws(m.load.bind(m), { instanceOf: MissingModuleException });
 });
 
-/// Module.registerProjectMatchers
-
-test("Module.registerProjectMatchers calls module's registerProjectMatchers()", t => {
-    t.plan(2);
-
-    class RegistryStub implements ApplicationModuleRegistry {
-        registerNameMatcher(expression: RegExp): void {
-            throw new Error('Method not implemented.');
-        }
-        registerContentMatcher(expression: RegExp): void {
-            throw new Error('Method not implemented.');
-        }
-    }
-
-    const localDummy = Object.assign({}, DummyModule);
-    const registry = new RegistryStub();
-    const spy = sinon.spy(localDummy, 'registerProjectMatchers');
-
-    const m = new Module();
-    m.modulePath = '/tmp/banana';
-    m.loader = function () {
-        return localDummy;
-    };
-
-    m.load();
-    m.registerProjectMatchers(registry);
-
-    t.is(spy.callCount, 1);
-    t.is(spy.firstCall.firstArg, registry);
-});
+/// Module.getClass
 
 test("Module.getClass calls module's getClass()", t => {
     t.plan(2);
 
-    class RegistryStub implements ApplicationModuleRegistry {
-        registerNameMatcher(expression: RegExp): void {
-            throw new Error('Method not implemented.');
-        }
-        registerContentMatcher(expression: RegExp): void {
-            throw new Error('Method not implemented.');
-        }
-    }
+    class Stub {}
 
     const localDummy = Object.assign({}, DummyModule);
-    const spy = sinon.stub(localDummy, 'getClass').returns(RegistryStub);
+    const spy = sinon.stub(localDummy, 'getClass').returns(Stub);
 
     const m = new Module();
     m.modulePath = '/tmp/banana';
@@ -146,5 +107,5 @@ test("Module.getClass calls module's getClass()", t => {
     const klass = m.getClass();
 
     t.is(spy.callCount, 1);
-    t.is(klass, RegistryStub);
+    t.is(klass, Stub);
 });

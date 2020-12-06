@@ -1,4 +1,4 @@
-import { ApplicationModule, ApplicationModuleRegistry } from '@internal/types/modules';
+import { ApplicationModule } from '@internal/types/modules';
 import path from 'path';
 
 const MODULE_ENTRYPOINT = 'index.ts';
@@ -60,16 +60,6 @@ export default class Module implements ApplicationModule {
         } catch (err: any) {
             throw new MissingModuleException(target);
         }
-    }
-
-    /**
-     * Registers the module's file name and contents matchers with the
-     * given registry.
-     *
-     * @param registry Registry to use
-     */
-    registerProjectMatchers(registry: ApplicationModuleRegistry) {
-        this.mod!.registerProjectMatchers(registry);
     }
 
     /**
