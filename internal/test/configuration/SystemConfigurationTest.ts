@@ -50,7 +50,15 @@ test('SystemConfiguration.validate throws if log is empty', t => {
 test('SystemConfiguration.validate throws if module[] is set but not an array', t => {
     t.plan(1);
 
-    const sc = new SystemConfiguration({ moduleFolder: 'test', modules: true }, new StubAdapter(''));
+    const sc = new SystemConfiguration(
+        {
+            moduleFolder: 'test',
+            modules: 'banana',
+            environment: 'production',
+            log: 'winston'
+        },
+        new StubAdapter('')
+    );
 
     t.throws(sc.validate.bind(sc), { instanceOf: InvalidConfigurationException });
 });
