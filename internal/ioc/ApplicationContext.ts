@@ -46,7 +46,7 @@ export default class ApplicationContext {
      * @param name Token of the registered item
      * @param klass Class to register
      */
-    register<T>(name: string, klass: constructor<T>) {
+    register<T>(name: string, klass: constructor<T>): void {
         this.container.register(name, { useClass: klass });
     }
 
@@ -56,7 +56,7 @@ export default class ApplicationContext {
      * @param name Token of the registered item
      * @param value Value to register
      */
-    registerValue(name: string, value: any) {
+    registerValue(name: string, value: any): void {
         this.container.register(name, { useValue: value });
     }
 
