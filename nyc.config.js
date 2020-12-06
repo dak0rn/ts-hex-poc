@@ -3,5 +3,5 @@ module.exports = {
     all: true,
     'check-coverage': true,
     reporter: 'html',
-    exclude: ['**/test/**', './*.*']
+    exclude: ['**/test/**', './*.*', 'coverage/**']
 };
