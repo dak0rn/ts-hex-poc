@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { container as rootContainer, DependencyContainer } from 'tsyringe';
+import { container as rootContainer, DependencyContainer, InjectionToken } from 'tsyringe';
 import { constructor } from 'tsyringe/dist/typings/types';
 
 /**
@@ -58,5 +58,17 @@ export default class ApplicationContext {
      */
     registerValue(name: string, value: any) {
         this.container.register(name, { useValue: value });
+    }
+
+    /**
+     * Returns the value for the corresponding token.
+     * Resolving walks up the context chain, so if a token has been registered
+     * in a parent context, it be resolved there - if not shadowed within a child.
+     *
+     * @param {InjectionToken} token Token of the value/class
+     * @return {unknown} The corresponding value / class
+     */
+    resolve(token: InjectionToken): unknown {
+        return this.container.resolve(token);
     }
 }
