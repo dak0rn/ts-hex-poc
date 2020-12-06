@@ -14,6 +14,7 @@ export function boot() {
 }
 
 // If the file is being executed from the CLI, start the boot up
+/* istanbul ignore if */
 if (require.main === module) {
     // TODO CLI and CLI options
     boot();
