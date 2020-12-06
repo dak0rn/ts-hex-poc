@@ -31,6 +31,22 @@ test('SystemConfiguration.validate throws if module folder name is empty', t => 
     t.throws(sc.validate.bind(sc), { instanceOf: InvalidConfigurationException });
 });
 
+test('SystemConfiguration.validate throws if no log folder is set', t => {
+    t.plan(1);
+
+    const sc = new SystemConfiguration({ moduleFolder: 'test' }, new StubAdapter(''));
+
+    t.throws(sc.validate.bind(sc), { instanceOf: InvalidConfigurationException });
+});
+
+test('SystemConfiguration.validate throws if log is empty', t => {
+    t.plan(1);
+
+    const sc = new SystemConfiguration({ moduleFolder: 'test', log: '' }, new StubAdapter(''));
+
+    t.throws(sc.validate.bind(sc), { instanceOf: InvalidConfigurationException });
+});
+
 test('SystemConfiguration.validate throws if module[] is set but not an array', t => {
     t.plan(1);
 
@@ -39,12 +55,50 @@ test('SystemConfiguration.validate throws if module[] is set but not an array', 
     t.throws(sc.validate.bind(sc), { instanceOf: InvalidConfigurationException });
 });
 
+test('SystemConfiguration.validate throws if environment is not set', t => {
+    t.plan(1);
+
+    const sc = new SystemConfiguration({ moduleFolder: 'test', modules: [] }, new StubAdapter(''));
+
+    t.throws(sc.validate.bind(sc), { instanceOf: InvalidConfigurationException });
+});
+
+test('SystemConfiguration.validate throws if environment is set but invalid', t => {
+    t.plan(3);
+
+    t.notThrows(function () {
+        new SystemConfiguration(
+            { moduleFolder: 'test', modules: [], environment: 'production', log: 'winston' },
+            new StubAdapter('')
+        ).validate();
+    });
+
+    t.notThrows(function () {
+        new SystemConfiguration(
+            { moduleFolder: 'test', modules: [], environment: 'development', log: 'winston' },
+            new StubAdapter('')
+        ).validate();
+    });
+
+    t.throws(
+        function () {
+            new SystemConfiguration(
+                { moduleFolder: 'test', modules: [], environment: 'banana', log: 'winston' },
+                new StubAdapter('')
+            ).validate();
+        },
+        { instanceOf: InvalidConfigurationException }
+    );
+});
+
 test('SystemConfiguration.validate does not throw for valid configuration', t => {
     t.plan(1);
 
     const valid = {
         moduleFolder: 'test',
-        modules: []
+        modules: [],
+        environment: 'production',
+        log: 'winston'
     };
 
     const sc = new SystemConfiguration(valid, new StubAdapter(''));
@@ -58,7 +112,9 @@ test('SystemConfiguration.get returns the correct items for simple paths', (t: E
 
     const valid = {
         moduleFolder: 'test',
-        modules: []
+        modules: [],
+        environment: 'production',
+        log: 'winston'
     };
 
     const sc = new SystemConfiguration(valid, new StubAdapter(''));
@@ -71,7 +127,9 @@ test('SystemConfiguration.get returns the correct items for nested paths', (t: E
 
     const valid = {
         moduleFolder: 'test',
-        modules: ['target']
+        modules: ['target'],
+        environment: 'production',
+        log: 'winston'
     };
 
     const sc = new SystemConfiguration(valid, new StubAdapter(''));
@@ -85,7 +143,9 @@ test('SystemConfiguration.moduleFolder returns the moduleFolder from the config 
     t.plan(1);
 
     const valid = {
-        moduleFolder: 'test'
+        moduleFolder: 'test',
+        environment: 'production',
+        log: 'winston'
     };
 
     const sc = new SystemConfiguration(valid, new StubAdapter(''));
@@ -100,7 +160,9 @@ test('SystemConfiguration.modules returns the module list from the configuration
 
     const valid = {
         moduleFolder: 'test',
-        modules: ['web', 'database', 'testing']
+        modules: ['web', 'database', 'testing'],
+        environment: 'production',
+        log: 'winston'
     };
 
     const sc = new SystemConfiguration(valid, new StubAdapter(''));

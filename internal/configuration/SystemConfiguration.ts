@@ -35,6 +35,14 @@ export default class SystemConfiguration extends Configuration {
             throw new InvalidConfigurationException('Configuration does not have `moduleFolder` set');
         }
 
+        if (!c.hasOwnProperty('log') || 0 === c.log.length) {
+            throw new InvalidConfigurationException('Configuration does not have `log` set');
+        }
+
+        if (!c.hasOwnProperty('environment') || !['production', 'development'].includes(c.environment)) {
+            throw new InvalidConfigurationException(`Invalid value for system.environment: ${c.environment}`);
+        }
+
         if (c.hasOwnProperty('modules') && !Array.isArray(c.modules)) {
             throw new InvalidConfigurationException(
                 'Configuration has declared modules but that key is not an array of strings'
