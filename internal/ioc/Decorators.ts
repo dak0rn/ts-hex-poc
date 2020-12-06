@@ -1,4 +1,5 @@
 import RootApplicationContext from './RootApplicationContext';
+import { inject, injectable } from 'tsyringe';
 
 /**
  * Class decorator that registers the decorated class under the name
@@ -13,3 +14,6 @@ export function provide(token: string): ClassDecorator {
         return klass;
     };
 }
+
+// Re-export decorators from tsyringe
+export { inject, injectable };
