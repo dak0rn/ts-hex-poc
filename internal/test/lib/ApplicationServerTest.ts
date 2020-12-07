@@ -12,6 +12,7 @@ import ApplicationContext from '@internal/ioc/ApplicationContext';
 import { constructor } from 'tsyringe/dist/typings/types';
 import ModuleLoader from '@internal/module/ModuleLoader';
 import Module from '@internal/module/Module';
+import { ApplicationModule } from '@internal/types/modules';
 
 class StubLogAdapter implements LogAdapter {
     info(message: string, ...meta: any[]): void {}
@@ -154,8 +155,9 @@ test('ApplicationServer.startup invokes setup functions', t => {
             this.ctx = new MockApplicationContext();
         }
 
-        protected launchModules(): void {
+        protected launchModules(): Promise<unknown> {
             t.pass();
+            return Promise.resolve();
         }
     }
 
@@ -197,11 +199,12 @@ test('ApplicationServer.launchModules launches modules', t => {
 
     class MockModule extends Module {
         constructor() {
-            super('');
+            super({} as ApplicationModule);
         }
 
-        launch(ctx: ApplicationContext): void {
+        launch(ctx: ApplicationContext): Promise<unknown> {
             t.is(ctx, context);
+            return Promise.resolve();
         }
     }
 

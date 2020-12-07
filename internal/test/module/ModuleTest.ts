@@ -34,8 +34,10 @@ test("Module.launch invokes the module's launch method", t => {
     t.plan(3);
 
     class MockLauncher implements ApplicationModuleLauncher {
-        launch(): void {
+        launch(): Promise<unknown> {
             t.pass();
+
+            return Promise.resolve();
         }
     }
 

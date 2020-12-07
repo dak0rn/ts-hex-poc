@@ -1,6 +1,7 @@
 import test from 'ava';
 import sinon from 'sinon';
-import { provide } from '@internal/ioc/Decorators';
+import { provide, inject, injectable } from '@internal/ioc/Decorators';
+import { inject as tsInject, injectable as tsInjectable } from 'tsyringe';
 import ApplicationContext from '@internal/ioc/ApplicationContext';
 import RootApplicationContext from '@internal/ioc/RootApplicationContext';
 
@@ -22,4 +23,14 @@ test('Decorators.provide registers class under name provided', t => {
     t.is(spy.firstCall.lastArg, Subject);
 
     sandbox.restore();
+});
+
+test('Decorators.inject is tsyringe.inject', t => {
+    t.plan(1);
+    t.is(inject, tsInject);
+});
+
+test('Decorators.injectable is tsyringe.injectable', t => {
+    t.plan(1);
+    t.is(injectable, tsInjectable);
 });
