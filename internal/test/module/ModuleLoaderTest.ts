@@ -5,6 +5,7 @@ import ConfigurationAdapter from '@internal/configuration/ConfigurationAdapter';
 import SystemConfiguration from '@internal/configuration/SystemConfiguration';
 import ApplicationConfiguration from '@internal/configuration/ApplicationConfiguration';
 import { ApplicationModule } from '@internal/types/modules';
+import Module from '@internal/module/Module';
 
 class StubAdapter extends ConfigurationAdapter {
     system(): SystemConfiguration {
@@ -49,18 +50,18 @@ test('ModuleLoader.load returns the provided modules', t => {
     const mod2 = new ModuleStub();
     const mod3 = new ModuleStub();
 
-    loader.onCall(0).returns(mod1);
-    loader.onCall(1).returns(mod2);
-    loader.onCall(2).returns(mod3);
+    loader.onCall(0).returns({ default: mod1 });
+    loader.onCall(1).returns({ default: mod2 });
+    loader.onCall(2).returns({ default: mod3 });
 
     ml.loader = loader;
 
-    const modules = ml.load();
+    const modules: Module[] = ml.load();
 
     t.is(modules.length, 3);
-    t.is(modules[0], mod1);
-    t.is(modules[1], mod2);
-    t.is(modules[2], mod3);
+    t.is(modules[0].getApplicationModule(), mod1);
+    t.is(modules[1].getApplicationModule(), mod2);
+    t.is(modules[2].getApplicationModule(), mod3);
 });
 
 test('ModuleLoader.load throws ModuleLoadingFailedException upon Errors thrown', t => {

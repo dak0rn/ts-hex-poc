@@ -1,8 +1,9 @@
 import SystemConfiguration from '@internal/configuration/SystemConfiguration';
 import Module from './Module';
 import path from 'path';
+import { ApplicationModule } from '@internal/types/modules';
 
-const ENTRYPOINT_FILE = 'index.ts';
+const MODULE_ENTRYPOINT = 'index.ts';
 
 export class ModuleLoadingFailedException extends Error {
     constructor(reason: string) {
@@ -39,10 +40,12 @@ export default class ModuleLoader {
         const loaded: Module[] = [];
 
         for (const moduleName of modules) {
-            const modulePath = path.resolve(base, moduleName, ENTRYPOINT_FILE);
+            const modulePath = path.resolve(base, moduleName);
             try {
-                const mod = this.loader(modulePath) as Module;
-                loaded.push(mod);
+                const target = path.resolve(modulePath, MODULE_ENTRYPOINT);
+                const { default: rawModule } = this.loader(target);
+
+                loaded.push(new Module(rawModule as ApplicationModule));
             } catch (err: any) {
                 if (err.hasOwnProperty('message'))
                     throw new ModuleLoadingFailedException(

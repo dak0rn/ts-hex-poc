@@ -196,6 +196,10 @@ test('ApplicationServer.launchModules launches modules', t => {
     }
 
     class MockModule extends Module {
+        constructor() {
+            super('');
+        }
+
         launch(ctx: ApplicationContext): void {
             t.is(ctx, context);
         }

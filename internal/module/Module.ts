@@ -1,34 +1,7 @@
 import ApplicationContext from '@internal/ioc/ApplicationContext';
 import { ApplicationModule, ApplicationModuleLauncher } from '@internal/types/modules';
-import path from 'path';
-
-const MODULE_ENTRYPOINT = 'index.ts';
-
-export class MissingModulePathException extends Error {
-    constructor() {
-        super('No modulePath set');
-    }
-}
-
-export class MissingModuleException extends Error {
-    constructor(modulePath: string) {
-        super(`Cannot file module at ${modulePath}`);
-    }
-}
 
 export default class Module implements ApplicationModule {
-    /**
-     * Function to load the module
-     * Defaults to {@link require}
-     */
-    public loader: Function;
-
-    /**
-     * Path of the module folder, must not include the
-     * module entry point file name
-     */
-    public modulePath: string | null;
-
     /**
      * Underlying module definition
      */
@@ -39,37 +12,9 @@ export default class Module implements ApplicationModule {
      */
     protected instance: ApplicationModuleLauncher | null;
 
-    constructor() {
-        this.modulePath = null;
-        this.loader = require;
-        this.mod = null;
+    constructor(mod: ApplicationModule) {
+        this.mod = mod;
         this.instance = null;
-    }
-
-    /**
-     * Load loads the module
-     *
-     * This method needs to be called in order to use any other module
-     * related ones.
-     *
-     * Subsequent calls to this method will not have any effects.
-     */
-    load() {
-        if (this.mod !== null) {
-            return this.mod;
-        }
-
-        if (null === this.modulePath || '' === this.modulePath) {
-            throw new MissingModulePathException();
-        }
-
-        const target = path.resolve(this.modulePath, MODULE_ENTRYPOINT);
-
-        try {
-            this.mod = this.loader(target) as ApplicationModule;
-        } catch (err: any) {
-            throw new MissingModuleException(target);
-        }
     }
 
     /**
@@ -92,5 +37,14 @@ export default class Module implements ApplicationModule {
         this.instance = ctx.resolve(klass) as ApplicationModuleLauncher;
 
         this.instance.launch();
+    }
+
+    /**
+     * Returns the underlying ApplicationModule
+     *
+     * @return Underlying module
+     */
+    getApplicationModule(): ApplicationModule | null {
+        return this.mod;
     }
 }
