@@ -17,9 +17,9 @@ export class ModuleLoadingFailedException extends Error {
 export default class ModuleLoader {
     /**
      * The module loader function
-     * Defaults to global.require
+     * Defaults to require
      */
-    public loader: Function = global.require;
+    public loader: Function = require;
 
     protected config: SystemConfiguration;
 
