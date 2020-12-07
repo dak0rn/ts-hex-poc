@@ -73,23 +73,26 @@ export default class ApplicationServer {
     /**
      * Loads and launches the configured modules
      */
-    protected launchModules(loader: ModuleLoader | null = null): void {
+    protected launchModules(loader: ModuleLoader | null = null): Promise<unknown> {
         if (null === loader) {
             const config = this.ctx!.resolve('SystemConfiguration') as SystemConfiguration;
             loader = new ModuleLoader(config);
         }
 
         const modules = loader.load();
+        const promises: Promise<unknown>[] = [];
 
         for (const mod of modules) {
-            mod.launch(this.ctx!);
+            promises.push(mod.launch(this.ctx!));
         }
+
+        return Promise.all(promises);
     }
 
     /**
      * Starts the application server and eventually also the application using it
      */
-    public startup(): void {
+    public async startup(): Promise<unknown> {
         console.log('Application server starting up');
         console.log('Using configuration file: ', CONFIG_FILE);
 
@@ -97,6 +100,7 @@ export default class ApplicationServer {
         const log = this.ctx!.resolve('SystemLogger') as SystemLogger;
 
         log.debug('Resolving modules...');
-        this.launchModules();
+
+        return await this.launchModules();
     }
 }

@@ -11,8 +11,9 @@ test('boot starts the application server', t => {
             super();
         }
 
-        startup() {
+        startup(): Promise<unknown> {
             t.pass();
+            return Promise.resolve();
         }
     }
 

@@ -9,8 +9,8 @@ import ApplicationServer from './lib/ApplicationServer';
  * internal components, parse the configuration and start declared
  * modules.
  */
-export function boot() {
-    ApplicationServer.getInstance().startup();
+export async function boot(): Promise<unknown> {
+    return await ApplicationServer.getInstance().startup();
 }
 
 // If the file is being executed from the CLI, start the boot up

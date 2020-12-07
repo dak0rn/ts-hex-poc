@@ -3,5 +3,5 @@ export interface ApplicationModule {
 }
 
 export interface ApplicationModuleLauncher {
-    launch(): void;
+    launch(): Promise<unknown>;
 }
