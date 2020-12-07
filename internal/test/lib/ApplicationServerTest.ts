@@ -10,6 +10,8 @@ import SystemLogger, { LogAdapter } from '@internal/log/SystemLogger';
 import SystemLoggerFactory from '@internal/log/SystemLoggerFactory';
 import ApplicationContext from '@internal/ioc/ApplicationContext';
 import { constructor } from 'tsyringe/dist/typings/types';
+import ModuleLoader from '@internal/module/ModuleLoader';
+import Module from '@internal/module/Module';
 
 class StubLogAdapter implements LogAdapter {
     info(message: string, ...meta: any[]): void {}
@@ -127,7 +129,7 @@ test('ApplicationServer.assemble correctly assembles the application context', t
 });
 
 test('ApplicationServer.startup invokes setup functions', t => {
-    t.plan(1);
+    t.plan(2);
 
     class MockApplicationContext extends ApplicationContext {
         constructor() {
@@ -146,10 +148,14 @@ test('ApplicationServer.startup invokes setup functions', t => {
             super();
         }
 
-        protected assembleContext(path: string) {
+        protected assembleContext(path: string): void {
             t.is(path, CONFIG_FILE);
 
-            return new MockApplicationContext();
+            this.ctx = new MockApplicationContext();
+        }
+
+        protected launchModules(): void {
+            t.pass();
         }
     }
 
@@ -161,4 +167,128 @@ test('ApplicationServer.startup invokes setup functions', t => {
     const mas = new MockApplicationServer();
 
     mas.startup();
+});
+
+test('ApplicationServer.launchModules launches modules', t => {
+    t.plan(2);
+
+    let context: MockApplicationContext;
+
+    class MockApplicationContext extends ApplicationContext {
+        constructor() {
+            super(null);
+        }
+
+        registerValue(key: string, value: any): void {}
+        register<T>(key: string, value: constructor<T>): void {}
+        resolve(key: string): any {}
+    }
+
+    class MockApplicationServer extends ApplicationServer {
+        constructor() {
+            super();
+        }
+
+        _execute(ctx: MockApplicationContext, loader: ModuleLoader) {
+            this.ctx = ctx;
+            this.launchModules(loader);
+        }
+    }
+
+    class MockModule extends Module {
+        launch(ctx: ApplicationContext): void {
+            t.is(ctx, context);
+        }
+    }
+
+    class MockModuleLoader extends ModuleLoader {
+        constructor() {
+            super({} as SystemConfiguration);
+        }
+
+        load(): Module[] {
+            return [new MockModule(), new MockModule()];
+        }
+    }
+
+    context = new MockApplicationContext();
+    const mas = new MockApplicationServer();
+    const mml = new MockModuleLoader();
+
+    mas._execute(context, mml);
+});
+
+test('ApplicationServer.launchModules constructs its own loader if not provided', t => {
+    t.plan(2);
+
+    let context: MockApplicationContext;
+
+    class StubAdapter extends ConfigurationAdapter {
+        constructor() {
+            super('');
+        }
+
+        system(): SystemConfiguration {
+            return {} as SystemConfiguration;
+        }
+        application(): ApplicationConfiguration {
+            return {} as ApplicationConfiguration;
+        }
+    }
+
+    class StubSystemConfiguration extends SystemConfiguration {
+        constructor() {
+            super({}, new StubAdapter());
+        }
+
+        modules(): string[] {
+            // Modules must be an empty array in order to not trigger actual file system interaction
+            return [];
+        }
+
+        resolvePathForKey(key: string): string {
+            if ('moduleFolder' === key) {
+                // This will be used from ModuleLoader
+                t.pass();
+
+                return '';
+            }
+
+            throw new Error('resolvePathForKey with key != moduleFolder');
+        }
+    }
+
+    class MockApplicationContext extends ApplicationContext {
+        constructor() {
+            super(null);
+        }
+
+        registerValue(key: string, value: any): void {}
+        register<T>(key: string, value: constructor<T>): void {}
+        resolve(key: string): any {
+            if ('SystemConfiguration' === key) {
+                // This will be used from ApplicationServer in order to create a ModuleLoader
+                t.pass();
+                return new StubSystemConfiguration();
+            }
+
+            t.fail('Requested something else than SystemConfiguration');
+        }
+    }
+
+    class MockApplicationServer extends ApplicationServer {
+        constructor() {
+            super();
+        }
+
+        _execute(ctx: MockApplicationContext) {
+            this.ctx = ctx;
+            this.launchModules();
+        }
+    }
+
+    context = new MockApplicationContext();
+    const mas = new MockApplicationServer();
+
+    mas._execute(context);
 });

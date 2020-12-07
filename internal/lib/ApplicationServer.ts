@@ -1,7 +1,9 @@
+import SystemConfiguration from '@internal/configuration/SystemConfiguration';
 import ApplicationContext from '@internal/ioc/ApplicationContext';
 import RootApplicationContext from '@internal/ioc/RootApplicationContext';
 import SystemLogger from '@internal/log/SystemLogger';
 import SystemLoggerFactory from '@internal/log/SystemLoggerFactory';
+import ModuleLoader from '@internal/module/ModuleLoader';
 import path from 'path';
 import ConfigurationFactory from '../configuration/ConfigurationFactory';
 
@@ -17,10 +19,14 @@ export const CONFIG_FILE: string = path.resolve(APPLICATION_DIR, 'conf', 'app.in
  * This class is a singleton.
  */
 export default class ApplicationServer {
-    /* istanbul ignore next */
-    protected constructor() {}
-
     protected static instance: ApplicationServer | null = null;
+
+    protected ctx: ApplicationContext | null;
+
+    /* istanbul ignore next */
+    protected constructor() {
+        this.ctx = null;
+    }
 
     /**
      * Returns an instance of {@link ApplicationServer}. Creates a new
@@ -43,7 +49,7 @@ export default class ApplicationServer {
      *
      * @param configFile Path to the configuration file
      */
-    protected assembleContext(configFile: string): ApplicationContext {
+    protected assembleContext(configFile: string): void {
         const configAdapter = ConfigurationFactory.getInstance(configFile);
         const sc = configAdapter.system();
         const ac = configAdapter.application();
@@ -56,14 +62,28 @@ export default class ApplicationServer {
 
         // Create the application context that is housing the
         // IoC container
-        const ctx = RootApplicationContext.getInstance();
+        this.ctx = RootApplicationContext.getInstance();
 
-        ctx.registerValue('SystemConfiguration', sc);
-        ctx.registerValue('ApplicationConfiguration', ac);
-        ctx.registerValue('ApplicationContext', ctx);
-        ctx.registerValue('SystemLogger', log);
+        this.ctx.registerValue('SystemConfiguration', sc);
+        this.ctx.registerValue('ApplicationConfiguration', ac);
+        this.ctx.registerValue('ApplicationContext', this.ctx);
+        this.ctx.registerValue('SystemLogger', log);
+    }
 
-        return ctx;
+    /**
+     * Loads and launches the configured modules
+     */
+    protected launchModules(loader: ModuleLoader | null = null): void {
+        if (null === loader) {
+            const config = this.ctx!.resolve('SystemConfiguration') as SystemConfiguration;
+            loader = new ModuleLoader(config);
+        }
+
+        const modules = loader.load();
+
+        for (const mod of modules) {
+            mod.launch(this.ctx!);
+        }
     }
 
     /**
@@ -73,9 +93,10 @@ export default class ApplicationServer {
         console.log('Application server starting up');
         console.log('Using configuration file: ', CONFIG_FILE);
 
-        const ctx = this.assembleContext(CONFIG_FILE);
-        const log = ctx.resolve('SystemLogger') as SystemLogger;
+        this.assembleContext(CONFIG_FILE);
+        const log = this.ctx!.resolve('SystemLogger') as SystemLogger;
 
-        log.info('Resolving modules...');
+        log.debug('Resolving modules...');
+        this.launchModules();
     }
 }
