@@ -135,13 +135,14 @@ test('ThreadLocal.run uses container correctly', t => {
 test('ThreadLocal.getStore returns the thread-local store', t => {
     t.plan(2);
 
+    const theStore = new Map<string, any>();
     const sandbox = sinon.createSandbox();
-    const spy = sandbox.stub(defaultStorage, 'getStore').returns(42);
+    const spy = sandbox.stub(defaultStorage, 'getStore').returns(theStore);
 
     const value = ThreadLocal.getStore();
 
     t.is(spy.callCount, 1);
-    t.is(value, 42);
+    t.is(value, theStore);
 
     sandbox.restore();
 });

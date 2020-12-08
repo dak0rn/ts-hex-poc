@@ -63,7 +63,7 @@ export default class ThreadLocal {
      * This function is to be invoked from a call chain started with
      * {@link ThreadLocal.run}
      */
-    public static getStore(): unknown {
-        return defaultStorage.getStore();
+    public static getStore(): Map<string, any> {
+        return defaultStorage.getStore() as Map<string, any>;
     }
 }
