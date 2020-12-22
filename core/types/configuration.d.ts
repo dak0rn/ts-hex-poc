@@ -1,11 +1,11 @@
-export abstract class Configuration {
+declare abstract class Configuration {
     constructor(sourceAdapter: ConfigurationAdapter);
 
     abstract get(key: string): any;
     abstract validate(): void;
 }
 
-export class SystemConfiguration extends Configuration {
+declare class SystemConfiguration extends Configuration {
     public applicationPath: string;
 
     constructor(config: RawConfiguration, sourceAdapter: ConfigurationAdapter);
@@ -16,11 +16,11 @@ export class SystemConfiguration extends Configuration {
     modules(): string[];
 }
 
-export interface RawConfiguration {
+declare interface RawConfiguration {
     [key: string]: any;
 }
 
-export class ApplicationConfiguration extends Configuration {
+declare class ApplicationConfiguration extends Configuration {
     constructor(config: RawConfiguration, sourceAdapter: ConfigurationAdapter);
 
     get(key: string): any;

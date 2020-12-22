@@ -1,4 +1,4 @@
-export class ThreadLocal {
+declare class ThreadLocal {
     public store: any;
     constructor(store: any);
     run(callback: (...args: any[]) => unknown): void;

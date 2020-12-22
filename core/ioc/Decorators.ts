@@ -17,54 +17,20 @@ export function provide(token: string): ClassDecorator {
 }
 
 /**
- * @hasContextFactory('banana')
- * class Apple {
+ * Parameterized class decorator that overwrites the static getInstance() function.
  *
- *     public static getContextInstance(): Apple {}
- * }
+ * The new imlpementation first tries to retrieve an existing instance
+ * from the thread-local store under the key provided. If that fails,
+ * it will create a new instance by either calling the constructor or by
+ * using the optionally provided factory function.
+ * The new instance is stored in the thread-local cache if in thread-local
+ * mode.
  *
- * hasContextFactory then implements getContextInstance() with checking for
- * an existing instance under 'banana' in the ThreadLocal store.
- * If there is no store or there is no entry, it returns new Apple()
+ * @param key Thread-local store key
+ * @param factory Optional factory used to create instances instead of the classes constructor
+ * @return Class decorator
  */
-
-/*
- POC:
-
- function threadLocalFactory(key: string) {
-	return function<T extends { new(...args:  any[]): any }>(klass: T) {
-		
-        Object.defineProperty(klass, 'getInstance', {
-            value: function(): T {
-                console.log('x)');
-                return new klass();
-            }
-        })
-
-        return klass;
-	};
-}
-
-//// 2:
-
-function threadLocalFactory(key: string, factory?: () => object) {
-	return function<T extends { new(...args:  any[]): any }>(klass: T) {
-		
-        Object.defineProperty(klass, 'getInstance', {
-            value: function(): T {
-                if('app' !== key || !factory)
-                return new klass();
-
-                return factory() as T;
-            }
-        })
-
-        return klass;
-	};
-}
-*/
-
-export function threadLocalFactory(key: string, factory?: () => object) {
+export function threadLocalFactory(key: string, factory?: () => object): Function {
     return function <T extends { new (...args: any[]): any }>(klass: T) {
         // Overwrite the existing static getInstance method
         Object.defineProperty(klass, 'getInstance', {
