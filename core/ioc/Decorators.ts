@@ -3,7 +3,7 @@ import { inject, injectable } from 'tsyringe';
 import ThreadLocal from '@core/lib/ThreadLocal';
 
 /**
- * Class decorator that registers the decorated class under the name
+ * Class decorator factory that registers the decorated class under the name
  * {@link token} in the root ApplicationContext's IoC container.
  *
  * @param {string} token Name to register under
@@ -13,6 +13,28 @@ export function provide(token: string): ClassDecorator {
         RootApplicationContext.getInstance().register(token, klass as any);
 
         return klass;
+    };
+}
+
+/**
+ * Method decorator factory that registers the decorated method under the name
+ * {@link token} in the root ApplicationContext's IoC container.
+ * Use with static factory functions.
+ *
+ * @param token Token to register under
+ */
+export function provideFactory(token: string): MethodDecorator {
+    return function (target: any, propertyKey: string | symbol): void {
+        const func = target[propertyKey] as Function;
+
+        if (func.length > 0)
+            throw new Error(
+                `Cannot decorate ${target.constructor.name}.${
+                    propertyKey as string
+                } with @provideFactory because it expects arguments.`
+            );
+
+        RootApplicationContext.getInstance().register(token, target[propertyKey]);
     };
 }
 
