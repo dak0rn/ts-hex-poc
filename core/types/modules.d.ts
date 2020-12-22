@@ -1,7 +1,7 @@
-declare interface ApplicationModule {
+export interface ApplicationModule {
     getClass(): { new (...args: any[]): any };
 }
 
-declare interface ApplicationModuleLauncher {
+export interface ApplicationModuleLauncher {
     launch(): Promise<unknown>;
 }

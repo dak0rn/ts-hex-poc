@@ -1,4 +1,4 @@
-declare class ApplicationContext {
+export class ApplicationContext {
     /**
      * Creates a new application context with the given IoC container.
      *

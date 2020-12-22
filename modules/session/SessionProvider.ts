@@ -1,4 +1,5 @@
-import { injectable, inject } from '@core';
+import { injectable, inject, ApplicationContext } from '@core';
+import { ApplicationModuleLauncher } from '@core/types/modules';
 
 @injectable()
 export default class SessionProvider implements ApplicationModuleLauncher {

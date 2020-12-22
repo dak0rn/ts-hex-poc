@@ -1,5 +1,6 @@
 import { injectable, inject } from '@core/ioc/Decorators';
 import SystemLogger from '@core/log/SystemLogger';
+import { ApplicationModuleLauncher } from '@core/types/modules';
 
 @injectable()
 export default class MSSQL implements ApplicationModuleLauncher {

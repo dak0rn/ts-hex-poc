@@ -7,7 +7,7 @@
     "test:unit": "ava --config ava.config.js",
     "test:unit:watch": "ava --config ava.config.js --watch",
     "test:unit:coverage": "nyc ava --config ava.config.js",
-    "start": "nodemon --exec ts-node --require tsconfig-paths/register internal/boot.ts"
+    "start": "nodemon --exec ts-node --require tsconfig-paths/register core/boot.ts"
   },
   "author": "Daniel Koch",
   "license": "ISC",
