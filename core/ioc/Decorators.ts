@@ -1,4 +1,5 @@
-import ApplicationContext from './ApplicationContext';
+// import ApplicationContext from './ApplicationContext';
+// We use inline-requires to prevent circular dependencies
 import { inject, injectable } from 'tsyringe';
 import ThreadLocal from '@core/lib/ThreadLocal';
 
@@ -10,7 +11,9 @@ import ThreadLocal from '@core/lib/ThreadLocal';
  */
 export function provide(token: string): ClassDecorator {
     return function (klass) {
-        ApplicationContext.getRootInstance().register(token, klass as any);
+        require('./ApplicationContext')
+            .default.getRootInstance()
+            .register(token, klass as any);
 
         return klass;
     };
@@ -34,7 +37,7 @@ export function provideFactory(token: string): MethodDecorator {
                 } with @provideFactory because it expects arguments.`
             );
 
-        ApplicationContext.getRootInstance().register(token, target[propertyKey]);
+        require('./ApplicationContext').default.getRootInstance().register(token, target[propertyKey]);
     };
 }
 
