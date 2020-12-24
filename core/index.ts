@@ -1,11 +1,11 @@
 /* instanbul ignore file */
-import { threadLocalFactory, inject, injectable, provide } from '@core/ioc/Decorators';
+import { threadLocalSingleton, inject, injectable, provide } from '@core/ioc/Decorators';
 import ApplicationContext from '@core/ioc/ApplicationContext';
 import ThreadLocal from '@core/lib/ThreadLocal';
 
 export {
     // IoC decorators
-    threadLocalFactory,
+    threadLocalSingleton,
     injectable,
     inject,
     provide,
