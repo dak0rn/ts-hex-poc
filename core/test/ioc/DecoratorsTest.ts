@@ -5,8 +5,6 @@ import { inject as tsInject, injectable as tsInjectable } from 'tsyringe';
 import ApplicationContext from '@core/ioc/ApplicationContext';
 import ThreadLocal from '@core/lib/ThreadLocal';
 
-const dummyMap = new Map<string, any>();
-
 test('Decorators.provide registers class under name provided', t => {
     t.plan(3);
 
@@ -56,7 +54,7 @@ test('Decorators.provideFactory throws if factory function has arguments', t => 
 
     const ac = new ApplicationContext(null);
 
-    const spy = sinon.stub(ac, 'register'); // Outside of sandbox as it is a local variable
+    sinon.stub(ac, 'register'); // Outside of sandbox as it is a local variable
     sandbox.stub(ApplicationContext, 'getRootInstance').returns(ac);
 
     t.throws(
