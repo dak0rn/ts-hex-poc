@@ -145,6 +145,16 @@ test('SystemConfiguration.get returns the correct items for nested paths', (t: E
     t.is(sc.get('modules.0'), 'target');
 });
 
+test('SystemConfiguration.get throws if a value does not exist', (t: ExecutionContext) => {
+    t.plan(1);
+
+    const data = {};
+
+    const sc = new SystemConfiguration(data, new StubAdapter(''));
+
+    t.throws(sc.get.bind(sc, 'a.b.c'));
+});
+
 /// SystemConfiguration.moduleFolder
 
 test('SystemConfiguration.moduleFolder returns the moduleFolder from the config provided', (t: ExecutionContext) => {

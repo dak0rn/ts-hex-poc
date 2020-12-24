@@ -56,3 +56,13 @@ test('ApplicationConfiguration.get returns the correct items for nested paths', 
     t.is(sc.get('a.nested.1'), 'array2');
     t.is(sc.get('a.b.c'), 5);
 });
+
+test('ApplicationConfiguration.get throws if a value does not exist', (t: ExecutionContext) => {
+    t.plan(1);
+
+    const data = {};
+
+    const sc = new ApplicationConfiguration(data, new StubAdapter(''));
+
+    t.throws(sc.get.bind(sc, 'a.b.c'));
+});
