@@ -1,5 +1,6 @@
 import { injectable, inject, ApplicationContext } from '@core';
 import { ApplicationModuleLauncher } from '@core/types/modules';
+import SessionBackend from './SessionBackend';
 
 @injectable()
 export default class SessionProvider implements ApplicationModuleLauncher {
@@ -10,6 +11,10 @@ export default class SessionProvider implements ApplicationModuleLauncher {
     }
 
     launch(): Promise<unknown> {
-        throw new Error('Method not implemented.');
+        // Instantiate the session backend singleton
+        // This will throw if the module is configured incorrectly
+        SessionBackend.getInstance();
+
+        return Promise.resolve();
     }
 }
