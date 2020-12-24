@@ -102,3 +102,29 @@ test('SystemLogger.error forwards arguments correctly', t => {
 
     sandbox.restore();
 });
+
+test('SystemLogger.createChild creates a child logger with uppercase prefix', t => {
+    t.plan(4);
+
+    const sandbox = sinon.createSandbox();
+    t.teardown(sandbox.restore.bind(sandbox));
+
+    const sa = new StubAdapter();
+
+    const errorSpy = sandbox.spy(sa, 'error');
+    const infoSpy = sandbox.spy(sa, 'info');
+    const warnSpy = sandbox.spy(sa, 'warn');
+    const debugSpy = sandbox.spy(sa, 'debug');
+
+    const sl = new SystemLogger(sa).createChild('banana');
+
+    sl.error('apple');
+    sl.info('apple');
+    sl.warn('apple');
+    sl.debug('apple');
+
+    t.is(errorSpy.firstCall.firstArg, '[BANANA] apple');
+    t.is(infoSpy.firstCall.firstArg, '[BANANA] apple');
+    t.is(warnSpy.firstCall.firstArg, '[BANANA] apple');
+    t.is(debugSpy.firstCall.firstArg, '[BANANA] apple');
+});

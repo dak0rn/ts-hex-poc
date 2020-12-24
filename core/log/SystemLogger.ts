@@ -12,6 +12,8 @@ export interface LogAdapter {
 export default class SystemLogger {
     public adapter: LogAdapter;
 
+    protected prefix: string | null = null;
+
     /**
      * Creates a new {@link SystemLogger} with the given {@link LogAdapter}
      *
@@ -22,14 +24,34 @@ export default class SystemLogger {
     }
 
     /**
+     * Creates a new system logger that uses the prefix given for log messages
+     * The prefix will be enclosed in `[ ]` and used in uppercase format.
+     *
+     * @param prefix Prefix
+     * @return Child logger
+     */
+    public createChild(prefix: string): SystemLogger {
+        const sl = new SystemLogger(this.adapter);
+        sl.prefix = prefix.toUpperCase();
+
+        return sl;
+    }
+
+    protected prepareMessage(message: string): string {
+        if (!this.prefix) return message;
+
+        return `[${this.prefix}] ${message}`;
+    }
+
+    /**
      * Write the given message with additional meta data to the logger
      * with severity=info
      *
      * @param message Message to log
      * @param meta Additional meta data
      */
-    info(message: string, ...meta: any[]): void {
-        this.adapter.info(message, ...meta);
+    public info(message: string, ...meta: any[]): void {
+        this.adapter.info(this.prepareMessage(message), ...meta);
     }
 
     /**
@@ -39,8 +61,8 @@ export default class SystemLogger {
      * @param message Message to log
      * @param meta Additional meta data
      */
-    debug(message: string, ...meta: any[]): void {
-        this.adapter.debug(message, ...meta);
+    public debug(message: string, ...meta: any[]): void {
+        this.adapter.debug(this.prepareMessage(message), ...meta);
     }
 
     /**
@@ -50,8 +72,8 @@ export default class SystemLogger {
      * @param message Message to log
      * @param meta Additional meta data
      */
-    error(message: string, ...meta: any[]): void {
-        this.adapter.error(message, ...meta);
+    public error(message: string, ...meta: any[]): void {
+        this.adapter.error(this.prepareMessage(message), ...meta);
     }
 
     /**
@@ -61,7 +83,7 @@ export default class SystemLogger {
      * @param message Message to log
      * @param meta Additional meta data
      */
-    warn(message: string, ...meta: any[]): void {
-        this.adapter.warn(message, ...meta);
+    public warn(message: string, ...meta: any[]): void {
+        this.adapter.warn(this.prepareMessage(message), ...meta);
     }
 }
