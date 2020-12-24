@@ -37,6 +37,13 @@ export default class SystemLogger {
         return sl;
     }
 
+    /**
+     * Prepends the prefix enclosed in `[ ] ` to the messages if a prefix
+     * is configured.
+     *
+     * @param message Message to prepare
+     * @return Prepared message
+     */
     protected prepareMessage(message: string): string {
         if (!this.prefix) return message;
 
