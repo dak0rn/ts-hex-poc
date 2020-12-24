@@ -1,6 +1,5 @@
 import SystemConfiguration from '@core/configuration/SystemConfiguration';
 import ApplicationContext from '@core/ioc/ApplicationContext';
-import RootApplicationContext from '@core/ioc/RootApplicationContext';
 import SystemLogger from '@core/log/SystemLogger';
 import SystemLoggerFactory from '@core/log/SystemLoggerFactory';
 import ModuleLoader from '@core/module/ModuleLoader';
@@ -62,12 +61,13 @@ export default class ApplicationServer {
 
         // Create the application context that is housing the
         // IoC container
-        this.ctx = RootApplicationContext.getInstance();
+        this.ctx = ApplicationContext.getRootInstance();
 
         this.ctx.registerValue('SystemConfiguration', sc);
         this.ctx.registerValue('ApplicationConfiguration', ac);
-        this.ctx.registerValue('ApplicationContext', this.ctx);
         this.ctx.registerValue('SystemLogger', log);
+
+        // The context is registered within itself under ApplicationContext automatically
     }
 
     /**

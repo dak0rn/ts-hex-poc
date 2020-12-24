@@ -75,4 +75,24 @@ export default class ApplicationContext {
     resolve(token: InjectionToken): unknown {
         return this.container.resolve(token);
     }
+
+    private static rootInstance: ApplicationContext | null = null;
+
+    /**
+     * Provides access to the root {@link ApplicationContext} instance.
+     * Will be lazily created if not already existing.
+     *
+     * The root {@link ApplicationContext} is a singleton kept outside any thread-local
+     * execution contexts. It is usually better to use {@link ApplicationContext#getInstance}
+     * instead.
+     *
+     * @return Root {@link ApplicationContext}
+     */
+    public static getRootInstance(): ApplicationContext {
+        if (null === ApplicationContext.rootInstance) {
+            ApplicationContext.rootInstance = new ApplicationContext(null);
+        }
+
+        return ApplicationContext.rootInstance;
+    }
 }

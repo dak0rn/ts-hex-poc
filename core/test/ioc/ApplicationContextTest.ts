@@ -157,3 +157,21 @@ test('ApplicationContext.resolve shadows values in child container', t => {
 
     t.is(child.resolve('input'), 42);
 });
+
+/// getRootInstance
+
+test('ApplicationContext.getRootInstance returns a singleton ApplicationContext', t => {
+    t.plan(1);
+
+    const ac: ApplicationContext = ApplicationContext.getRootInstance();
+
+    t.is(ApplicationContext.getRootInstance(), ac);
+});
+
+test('ApplicationContext.getRootInstance returns a singleton ApplicationContext with the root container', t => {
+    t.plan(1);
+
+    const ac: ApplicationContext = ApplicationContext.getRootInstance();
+
+    t.is(ac.container, tsyringContainer);
+});
