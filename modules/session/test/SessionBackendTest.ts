@@ -22,10 +22,10 @@ class StubAdapter extends ConfigurationAdapter {
 }
 
 class AccessSessionBackend extends SessionBackend {
-    public put(session: BaseSession): void {
+    public async put(session: BaseSession): Promise<void> {
         throw new Error('Method not implemented.');
     }
-    public fetch<T extends BaseSession>(key: string, obj: T): boolean {
+    public async fetch<T extends BaseSession>(key: string, obj: T): Promise<boolean> {
         throw new Error('Method not implemented.');
     }
     public static __reset(): void {
@@ -60,10 +60,10 @@ test.serial('SessionBackend.getInstance creates a new backend as configured', t 
     t.plan(1);
 
     class BananaBackend extends SessionBackend {
-        public put(session: BaseSession): void {
+        public async put(session: BaseSession): Promise<void> {
             throw new Error('Method not implemented.');
         }
-        public fetch<T extends BaseSession>(key: string, obj: T): boolean {
+        public async fetch<T extends BaseSession>(key: string, obj: T): Promise<boolean> {
             throw new Error('Method not implemented.');
         }
         protected init(): void {}
@@ -104,10 +104,10 @@ test.serial('SessionBackend.getInstance uses the singleton pattern', t => {
     t.plan(1);
 
     class BananaBackend extends SessionBackend {
-        public put(session: BaseSession): void {
+        public async put(session: BaseSession): Promise<void> {
             throw new Error('Method not implemented.');
         }
-        public fetch<T extends BaseSession>(key: string, obj: T): boolean {
+        public async fetch<T extends BaseSession>(key: string, obj: T): Promise<boolean> {
             throw new Error('Method not implemented.');
         }
         protected init(): void {}
@@ -147,10 +147,10 @@ test.serial('SessionBackend.getInstance resolves the backend in the ApplicationC
     t.is(AccessSessionBackend.__get(), null);
 
     class BananaBackend extends SessionBackend {
-        public put(session: BaseSession): void {
+        public async put(session: BaseSession): Promise<void> {
             throw new Error('Method not implemented.');
         }
-        public fetch<T extends BaseSession>(key: string, obj: T): boolean {
+        public async fetch<T extends BaseSession>(key: string, obj: T): Promise<boolean> {
             throw new Error('Method not implemented.');
         }
         protected init(): void {}

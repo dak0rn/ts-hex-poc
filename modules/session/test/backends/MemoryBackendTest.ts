@@ -29,7 +29,7 @@ test('MemoryBackend.put stores in a Map in memory', t => {
     m.assert();
 });
 
-test('MemoryBackend.fetch retrieves a session from the store', t => {
+test('MemoryBackend.fetch retrieves a session from the store', async t => {
     t.plan(3);
 
     class MockSession extends BaseSession {
@@ -50,13 +50,13 @@ test('MemoryBackend.fetch retrieves a session from the store', t => {
     const m = new MemoryBackend();
     m.put(banana);
 
-    const status = m.fetch('__banana__', apple);
+    const status = await m.fetch('__banana__', apple);
 
     t.true(status);
     t.deepEqual(apple, banana);
 });
 
-test('MemoryBackend.fetch returns false if session does not exist', t => {
+test('MemoryBackend.fetch returns false if session does not exist', async t => {
     t.plan(1);
 
     class MockSession extends BaseSession {
@@ -73,7 +73,7 @@ test('MemoryBackend.fetch returns false if session does not exist', t => {
     }
 
     const m = new MemoryBackend();
-    const result = m.fetch('banana!', new MockSession());
+    const result = await m.fetch('banana!', new MockSession());
 
     t.is(result, false);
 });

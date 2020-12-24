@@ -45,7 +45,7 @@ export default abstract class SessionBackend {
      *
      * @param session Session to persist
      */
-    public abstract put(session: BaseSession): void;
+    public abstract put(session: BaseSession): Promise<void>;
 
     /**
      * Retrieves a {@link BaseSession} identified by the given key
@@ -56,7 +56,7 @@ export default abstract class SessionBackend {
      * @param key Surrogate key of the session
      * @param obj Session object to deserialize into
      */
-    public abstract fetch<T extends BaseSession>(key: string, obj: T): boolean;
+    public abstract fetch<T extends BaseSession>(key: string, obj: T): Promise<boolean>;
 
     /**
      * Returns the {@link SessionBackend} that is configured in the application configuration

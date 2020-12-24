@@ -13,11 +13,11 @@ export default class MemoryBackend extends SessionBackend {
         this.store = new Map<string, string>();
     }
 
-    public put(session: BaseSession): void {
+    public async put(session: BaseSession): Promise<void> {
         this.store.set(session.surrogateKey, session.serialize());
     }
 
-    public fetch<T extends BaseSession>(key: string, obj: T): boolean {
+    public async fetch<T extends BaseSession>(key: string, obj: T): Promise<boolean> {
         const session = this.store.get(key);
 
         if (!session) {
