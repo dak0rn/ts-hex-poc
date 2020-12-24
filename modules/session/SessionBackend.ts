@@ -22,15 +22,20 @@ export class SessionBackendNotSupportedError extends Error {
 
 /**
  * Lookup type for available backends
+ * The key is the unique identifier to be used in the configuration file
+ * The value for each key is a function that lazily requires the desired backend
  */
 export interface AvailableBackends {
-    [key: string]: { new (...args: any[]): any };
+    [key: string]: () => { new (...args: any[]): any };
 }
 
 /**
  * Lookup table for available session backends
  */
-export const availableBackends: AvailableBackends = {};
+export const availableBackends: AvailableBackends = {
+    memory: () => require('./backends/MemoryBackend').default,
+    redis: () => require('./backends/RedisBackend').default
+};
 
 /**
  * Base class for all session backends and factory class to
@@ -82,11 +87,13 @@ export default abstract class SessionBackend {
                 throw new SessionBackendNotConfiguredError();
             }
 
-            const klass = availableBackends[configuredBackend];
+            const load = availableBackends[configuredBackend];
 
-            if (!klass) {
+            if (!load) {
                 throw new SessionBackendNotSupportedError(configuredBackend);
             }
+
+            const klass = load();
 
             SessionBackend._instance = ac.resolve(klass) as SessionBackend;
         }

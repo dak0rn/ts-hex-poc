@@ -86,7 +86,7 @@ test.serial('SessionBackend.getInstance creates a new backend as configured', t 
 
     ac.registerValue('ApplicationConfiguration', conf);
 
-    availableBackends['banana'] = BananaBackend;
+    availableBackends['banana'] = () => BananaBackend;
 
     t.teardown(function () {
         delete availableBackends['banana'];
@@ -130,7 +130,7 @@ test.serial('SessionBackend.getInstance uses the singleton pattern', t => {
 
     ac.registerValue('ApplicationConfiguration', conf);
 
-    availableBackends['banana'] = BananaBackend;
+    availableBackends['banana'] = () => BananaBackend;
 
     t.teardown(function () {
         delete availableBackends['banana'];
@@ -174,7 +174,7 @@ test.serial('SessionBackend.getInstance resolves the backend in the ApplicationC
 
     ac.registerValue('ApplicationConfiguration', conf);
 
-    availableBackends['banana'] = BananaBackend;
+    availableBackends['banana'] = () => BananaBackend;
 
     t.teardown(function () {
         delete availableBackends['banana'];
