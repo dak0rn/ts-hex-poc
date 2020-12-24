@@ -3,11 +3,12 @@ import { container as rootContainer, DependencyContainer, InjectionToken } from 
 import { constructor } from 'tsyringe/dist/typings/types';
 import ThreadLocal from '@core/lib/ThreadLocal';
 import { threadLocalSingleton } from './Decorators';
+import CoreObject from '@core/shared/CoreObject';
 
 /**
  * Inversion of Control container for dependency injection
  */
-export default class ApplicationContext {
+export default class ApplicationContext extends CoreObject {
     protected iocContainer: DependencyContainer;
 
     /**
@@ -18,6 +19,8 @@ export default class ApplicationContext {
      * @param container IoC container to use. If `null`, will use the root container.
      */
     constructor(container: DependencyContainer | null) {
+        super();
+
         if (null === container) {
             this.iocContainer = rootContainer;
         } else {

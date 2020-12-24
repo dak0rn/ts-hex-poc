@@ -1,3 +1,4 @@
+import CoreObject from '@core/shared/CoreObject';
 import ConfigurationAdapter from './ConfigurationAdapter';
 import IniAdapter from './IniAdapter';
 
@@ -14,9 +15,11 @@ export class MissingAdapterException extends Error {
 /**
  * Factory class for configuration adapters
  */
-export default class ConfigurationFactory {
+export default class ConfigurationFactory extends CoreObject {
     /* istanbul ignore next */
-    private constructor() {}
+    private constructor() {
+        super();
+    }
 
     /**
      * Creates a new {@link ConfigurationAdapter} for the given configuration

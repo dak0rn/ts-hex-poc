@@ -1,3 +1,4 @@
+import CoreObject from '@core/shared/CoreObject';
 import { AsyncLocalStorage } from 'async_hooks';
 
 export const defaultStorage = new AsyncLocalStorage();
@@ -27,7 +28,7 @@ export const defaultStorage = new AsyncLocalStorage();
  * Even though the print function uses the same global variable in both execution
  * cases, the underlying value (store) is different.
  */
-export default class ThreadLocal {
+export default class ThreadLocal extends CoreObject {
     /**
      * Store value
      * A Map<string, any> is being used in order to support
@@ -41,6 +42,8 @@ export default class ThreadLocal {
      * @param store Store, optional
      */
     constructor(store?: Map<string, any>) {
+        super();
+
         if (store) {
             this.store = new Map(store);
         } else {

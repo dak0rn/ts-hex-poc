@@ -1,3 +1,4 @@
+import CoreObject from '@core/shared/CoreObject';
 import ConfigurationAdapter from './ConfigurationAdapter';
 
 export class InvalidConfigurationException extends Error {
@@ -9,7 +10,7 @@ export class InvalidConfigurationException extends Error {
 /**
  * Base class for the configuration stores
  */
-export default abstract class Configuration {
+export default abstract class Configuration extends CoreObject {
     /**
      * The {@link ConfigurationAdapter} that retrieved the values for
      * this {@link Configuration}.
@@ -17,6 +18,7 @@ export default abstract class Configuration {
     protected sourceAdapter: ConfigurationAdapter;
 
     constructor(sourceAdapter: ConfigurationAdapter) {
+        super();
         this.sourceAdapter = sourceAdapter;
     }
 
