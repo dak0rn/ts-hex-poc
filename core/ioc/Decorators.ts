@@ -1,4 +1,4 @@
-import RootApplicationContext from './RootApplicationContext';
+import ApplicationContext from './ApplicationContext';
 import { inject, injectable } from 'tsyringe';
 import ThreadLocal from '@core/lib/ThreadLocal';
 
@@ -10,7 +10,7 @@ import ThreadLocal from '@core/lib/ThreadLocal';
  */
 export function provide(token: string): ClassDecorator {
     return function (klass) {
-        RootApplicationContext.getInstance().register(token, klass as any);
+        ApplicationContext.getRootInstance().register(token, klass as any);
 
         return klass;
     };
@@ -34,7 +34,7 @@ export function provideFactory(token: string): MethodDecorator {
                 } with @provideFactory because it expects arguments.`
             );
 
-        RootApplicationContext.getInstance().register(token, target[propertyKey]);
+        ApplicationContext.getRootInstance().register(token, target[propertyKey]);
     };
 }
 

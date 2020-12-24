@@ -1,7 +1,6 @@
 import test from 'ava';
 import sinon from 'sinon';
 import ConfigurationFactory from '@core/configuration/ConfigurationFactory';
-import RootApplicationContext from '@core/ioc/RootApplicationContext';
 import ApplicationServer, { CONFIG_FILE } from '@core/lib/ApplicationServer';
 import SystemConfiguration from '@core/configuration/SystemConfiguration';
 import ConfigurationAdapter from '@core/configuration/ConfigurationAdapter';
@@ -41,7 +40,7 @@ test('ApplicationServer.getInstance returns a cached instance', t => {
 });
 
 test('ApplicationServer.assemble correctly assembles the application context', t => {
-    t.plan(14);
+    t.plan(12);
 
     let stubSC: any = null;
     let stubAC: any = null;
@@ -100,7 +99,7 @@ test('ApplicationServer.assemble correctly assembles the application context', t
 
     const confSpy = sandbox.stub(ConfigurationFactory, 'getInstance').returns(new StubAdapter());
     const logSpy = sandbox.stub(SystemLoggerFactory, 'createInstance').returns(stubLogger);
-    const acSpy = sandbox.stub(RootApplicationContext, 'getInstance').returns(mockAC);
+    const acSpy = sandbox.stub(ApplicationContext, 'getRootInstance').returns(mockAC);
     const rvSpy = sandbox.stub(mockAC, 'registerValue');
     const rSpy = sandbox.stub(mockAC, 'register');
 
@@ -112,7 +111,7 @@ test('ApplicationServer.assemble correctly assembles the application context', t
     t.is(logSpy.callCount, 1);
     t.is(acSpy.callCount, 1);
 
-    t.is(rvSpy.callCount, 4);
+    t.is(rvSpy.callCount, 3);
 
     t.is(rSpy.callCount, 0);
 
@@ -122,11 +121,8 @@ test('ApplicationServer.assemble correctly assembles the application context', t
     t.is(rvSpy.getCall(1).firstArg, 'ApplicationConfiguration');
     t.is(rvSpy.getCall(1).lastArg, stubAC);
 
-    t.is(rvSpy.getCall(2).firstArg, 'ApplicationContext');
-    t.is(rvSpy.getCall(2).lastArg, mockAC);
-
-    t.is(rvSpy.getCall(3).firstArg, 'SystemLogger');
-    t.is(rvSpy.getCall(3).lastArg, stubLogger);
+    t.is(rvSpy.getCall(2).firstArg, 'SystemLogger');
+    t.is(rvSpy.getCall(2).lastArg, stubLogger);
 });
 
 test('ApplicationServer.startup invokes setup functions', t => {

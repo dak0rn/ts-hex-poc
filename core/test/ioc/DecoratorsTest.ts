@@ -3,7 +3,6 @@ import sinon from 'sinon';
 import { provide, inject, injectable, provideFactory, threadLocalSingleton } from '@core/ioc/Decorators';
 import { inject as tsInject, injectable as tsInjectable } from 'tsyringe';
 import ApplicationContext from '@core/ioc/ApplicationContext';
-import RootApplicationContext from '@core/ioc/RootApplicationContext';
 import ThreadLocal from '@core/lib/ThreadLocal';
 
 const dummyMap = new Map<string, any>();
@@ -16,7 +15,7 @@ test('Decorators.provide registers class under name provided', t => {
     const ac = new ApplicationContext(null);
 
     const spy = sinon.stub(ac, 'register'); // Outside of sandbox as it is a local variable
-    sandbox.stub(RootApplicationContext, 'getInstance').returns(ac);
+    sandbox.stub(ApplicationContext, 'getRootInstance').returns(ac);
 
     @provide('subject')
     class Subject {}
@@ -37,7 +36,7 @@ test('Decorators.provideFactory registers factory under name provided', t => {
     const ac = new ApplicationContext(null);
 
     const spy = sinon.stub(ac, 'register'); // Outside of sandbox as it is a local variable
-    sandbox.stub(RootApplicationContext, 'getInstance').returns(ac);
+    sandbox.stub(ApplicationContext, 'getRootInstance').returns(ac);
 
     class Subject {
         @provideFactory('subject')
@@ -58,7 +57,7 @@ test('Decorators.provideFactory throws if factory function has arguments', t => 
     const ac = new ApplicationContext(null);
 
     const spy = sinon.stub(ac, 'register'); // Outside of sandbox as it is a local variable
-    sandbox.stub(RootApplicationContext, 'getInstance').returns(ac);
+    sandbox.stub(ApplicationContext, 'getRootInstance').returns(ac);
 
     t.throws(
         function () {
