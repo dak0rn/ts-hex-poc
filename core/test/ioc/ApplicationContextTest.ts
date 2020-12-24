@@ -1,6 +1,8 @@
 import test from 'ava';
 import ApplicationContext from '@core/ioc/ApplicationContext';
 import { container as tsyringContainer } from 'tsyringe';
+import sinon from 'sinon';
+import ThreadLocal from '@core/lib/ThreadLocal';
 
 test('ApplicationContext.constructor creates a new ApplicationContext with the given DependencyContainer', t => {
     t.plan(1);
@@ -174,4 +176,74 @@ test('ApplicationContext.getRootInstance returns a singleton ApplicationContext 
     const ac: ApplicationContext = ApplicationContext.getRootInstance();
 
     t.is(ac.container, tsyringContainer);
+});
+
+/// getInstance
+test('ApplicationContext.getInstance returns the root instance outside of thread-local', t => {
+    t.plan(1);
+
+    const sandbox = sinon.createSandbox();
+    t.teardown(sandbox.restore.bind(sandbox));
+
+    sandbox.stub(ThreadLocal, 'active').returns(false);
+
+    t.is(ApplicationContext.getInstance(), ApplicationContext.getRootInstance());
+});
+
+test('ApplicationContext.getInstance creates a new child from the root inside thread-local', t => {
+    t.plan(2);
+
+    class Mock extends ApplicationContext {
+        createChildContext(): ApplicationContext {
+            t.pass();
+            return super.createChildContext();
+        }
+    }
+
+    const sandbox = sinon.createSandbox();
+    t.teardown(sandbox.restore.bind(sandbox));
+
+    const root = new Mock(null);
+
+    sandbox.stub(ThreadLocal, 'active').returns(true);
+    sandbox.stub(ThreadLocal, 'getStore').returns(new Map<string, any>());
+    sandbox.stub(ApplicationContext, 'getRootInstance').returns(root);
+
+    const instance = ApplicationContext.getInstance();
+
+    t.not(instance, root);
+});
+
+test('ApplicationContext.getInstance caches child in thread-local store under "ApplicationContext"', t => {
+    t.plan(1);
+
+    const sandbox = sinon.createSandbox();
+    t.teardown(sandbox.restore.bind(sandbox));
+
+    const store = new Map<string, any>();
+
+    sandbox.stub(ThreadLocal, 'active').returns(true);
+    sandbox.stub(ThreadLocal, 'getStore').returns(store);
+
+    const instance = ApplicationContext.getInstance();
+
+    t.is(store.get('ApplicationContext'), instance);
+});
+
+test('ApplicationContext.getInstance uses a cached instance', t => {
+    t.plan(1);
+
+    const sandbox = sinon.createSandbox();
+    t.teardown(sandbox.restore.bind(sandbox));
+
+    const mock = new ApplicationContext(null);
+
+    const store = new Map<string, any>([['ApplicationContext', mock]]);
+
+    sandbox.stub(ThreadLocal, 'active').returns(true);
+    sandbox.stub(ThreadLocal, 'getStore').returns(store);
+
+    const instance = ApplicationContext.getInstance();
+
+    t.is(instance, mock);
 });

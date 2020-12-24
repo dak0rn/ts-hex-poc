@@ -1,6 +1,8 @@
 import 'reflect-metadata';
 import { container as rootContainer, DependencyContainer, InjectionToken } from 'tsyringe';
 import { constructor } from 'tsyringe/dist/typings/types';
+import ThreadLocal from '@core/lib/ThreadLocal';
+import { threadLocalSingleton } from './Decorators';
 
 /**
  * Inversion of Control container for dependency injection
@@ -74,6 +76,28 @@ export default class ApplicationContext {
      */
     resolve(token: InjectionToken): unknown {
         return this.container.resolve(token);
+    }
+
+    /**
+     * Returns a singleton of {@link ApplicationContext} respecting thread-local.
+     * If not running in thread-local, will return the root instance. If in thread-local,
+     * will return the singleton instance from the thread-local store. If no such
+     * instance exists, creates a new instance as a child of the root context, stores
+     * and returns that one.
+     *
+     * @return Thread-local aware singleton
+     */
+    @threadLocalSingleton('ApplicationContext')
+    public static getInstance(): ApplicationContext {
+        // The instance caching is done by @threadLocalSingleton
+
+        const root = ApplicationContext.getRootInstance();
+
+        if (ThreadLocal.active()) {
+            return root.createChildContext();
+        }
+
+        return root;
     }
 
     private static rootInstance: ApplicationContext | null = null;
