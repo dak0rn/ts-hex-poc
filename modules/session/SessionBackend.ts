@@ -64,13 +64,19 @@ export default abstract class SessionBackend {
     public abstract fetch<T extends BaseSession>(key: string, obj: T): Promise<boolean>;
 
     /**
+     * Sets up the session backend
+     * Overwrite if the backend has to perform stateful, async operations (e.g. connecting to a database)
+     */
+    protected async setup(): Promise<void> {}
+
+    /**
      * Returns the {@link SessionBackend} that is configured in the application configuration
      * Set the key `session.backend` to the name of a supported backend as listed in {@link availableBackends}.
      * The backend is a singleton.
      *
      * @return Session backend
      */
-    public static getInstance(): SessionBackend {
+    public static async getInstance(): Promise<SessionBackend> {
         if (!SessionBackend._instance) {
             const ac = ApplicationContext.getInstance();
             const conf = ac.resolve('ApplicationConfiguration') as ApplicationConfiguration;
@@ -96,6 +102,7 @@ export default abstract class SessionBackend {
             const klass = load();
 
             SessionBackend._instance = ac.resolve(klass) as SessionBackend;
+            await SessionBackend._instance.setup();
         }
 
         return SessionBackend._instance;

@@ -42,7 +42,7 @@ test.beforeEach(function () {
     AccessSessionBackend.__reset();
 });
 
-test.serial('SessionBackend.getInstance throws if no session backend is configured', t => {
+test.serial('SessionBackend.getInstance throws if no session backend is configured', async t => {
     t.plan(1);
 
     // Create an empty application configuration
@@ -51,12 +51,12 @@ test.serial('SessionBackend.getInstance throws if no session backend is configur
 
     ac.registerValue('ApplicationConfiguration', conf);
 
-    t.throws(function () {
-        SessionBackend.getInstance();
+    await t.throwsAsync(async function () {
+        await SessionBackend.getInstance();
     });
 });
 
-test.serial('SessionBackend.getInstance creates a new backend as configured', t => {
+test.serial('SessionBackend.getInstance creates a new backend as configured', async t => {
     t.plan(1);
 
     class BananaBackend extends SessionBackend {
@@ -66,7 +66,6 @@ test.serial('SessionBackend.getInstance creates a new backend as configured', t 
         public async fetch<T extends BaseSession>(key: string, obj: T): Promise<boolean> {
             throw new Error('Method not implemented.');
         }
-        protected init(): void {}
 
         protected store(key: string, object: BaseSession): void {}
 
@@ -95,13 +94,13 @@ test.serial('SessionBackend.getInstance creates a new backend as configured', t 
 
     sandbox.stub(ApplicationContext, 'getInstance').returns(ac);
 
-    const instance = SessionBackend.getInstance();
+    const instance = await SessionBackend.getInstance();
 
     t.true(instance instanceof BananaBackend);
 });
 
-test.serial('SessionBackend.getInstance uses the singleton pattern', t => {
-    t.plan(1);
+test.serial('SessionBackend.getInstance uses the singleton pattern', async t => {
+    t.plan(2);
 
     class BananaBackend extends SessionBackend {
         public async put(session: BaseSession): Promise<void> {
@@ -110,8 +109,6 @@ test.serial('SessionBackend.getInstance uses the singleton pattern', t => {
         public async fetch<T extends BaseSession>(key: string, obj: T): Promise<boolean> {
             throw new Error('Method not implemented.');
         }
-        protected init(): void {}
-
         protected store(key: string, object: BaseSession): void {}
 
         protected retrieve(key: string): BaseSession {
@@ -138,10 +135,14 @@ test.serial('SessionBackend.getInstance uses the singleton pattern', t => {
     });
     sandbox.stub(ApplicationContext, 'getInstance').returns(ac);
 
-    t.is(SessionBackend.getInstance(), SessionBackend.getInstance());
+    const first = await SessionBackend.getInstance();
+    const second = await SessionBackend.getInstance();
+
+    t.true(first instanceof BananaBackend);
+    t.is(first, second);
 });
 
-test.serial('SessionBackend.getInstance resolves the backend in the ApplicationContext', t => {
+test.serial('SessionBackend.getInstance resolves the backend in the ApplicationContext', async t => {
     t.plan(3);
 
     t.is(AccessSessionBackend.__get(), null);
@@ -153,8 +154,6 @@ test.serial('SessionBackend.getInstance resolves the backend in the ApplicationC
         public async fetch<T extends BaseSession>(key: string, obj: T): Promise<boolean> {
             throw new Error('Method not implemented.');
         }
-        protected init(): void {}
-
         protected store(key: string, object: BaseSession): void {}
 
         protected retrieve(key: string): BaseSession {
@@ -181,11 +180,59 @@ test.serial('SessionBackend.getInstance resolves the backend in the ApplicationC
         sandbox.restore();
     });
 
-    const spy = sandbox.stub(ac, 'resolve').returns(conf);
+    const spy = sandbox.stub(ac, 'resolve').onFirstCall().returns(conf).returns(new BananaBackend());
+
     sandbox.stub(ApplicationContext, 'getInstance').returns(ac);
 
-    SessionBackend.getInstance();
+    await SessionBackend.getInstance();
 
     t.is(spy.callCount, 2);
     t.is(spy.getCall(1).firstArg, BananaBackend);
+});
+
+test.serial('SessionBackend.invokes the setup function', async t => {
+    t.plan(1);
+
+    let callCount = 0;
+    class BananaBackend extends SessionBackend {
+        public async put(session: BaseSession): Promise<void> {}
+        public async fetch<T extends BaseSession>(key: string, obj: T): Promise<boolean> {
+            throw new Error('Method not implemented.');
+        }
+        protected store(key: string, object: BaseSession): void {}
+
+        protected retrieve(key: string): BaseSession {
+            return {} as BaseSession;
+        }
+
+        protected async setup(): Promise<void> {
+            if (callCount++ > 0) {
+                t.fail();
+            } else {
+                t.pass();
+            }
+        }
+    }
+
+    const baseConfig = {
+        session: {
+            backend: 'banana'
+        }
+    };
+    const ac = new ApplicationContext(container.createChildContainer());
+    const conf = new ApplicationConfiguration(baseConfig, new StubAdapter());
+    const sandbox = sinon.createSandbox();
+
+    ac.registerValue('ApplicationConfiguration', conf);
+
+    availableBackends['banana'] = () => BananaBackend;
+
+    t.teardown(function () {
+        delete availableBackends['banana'];
+        sandbox.restore();
+    });
+    sandbox.stub(ApplicationContext, 'getInstance').returns(ac);
+
+    await SessionBackend.getInstance();
+    await SessionBackend.getInstance();
 });
