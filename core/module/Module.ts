@@ -31,12 +31,12 @@ export default class Module implements ApplicationModule {
      *
      * @param ctx {@link ApplicationContext} to launch the module with
      */
-    launch(ctx: ApplicationContext): Promise<unknown> {
+    async launch(ctx: ApplicationContext): Promise<unknown> {
         const klass = this.getClass();
 
         this.instance = ctx.resolve(klass) as ApplicationModuleLauncher;
 
-        return this.instance.launch();
+        return await this.instance.launch();
     }
 
     /**

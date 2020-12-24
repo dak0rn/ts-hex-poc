@@ -10,11 +10,11 @@ export default class SessionProvider implements ApplicationModuleLauncher {
         this.ctx = ctx;
     }
 
-    launch(): Promise<unknown> {
+    async launch(): Promise<unknown> {
         // Instantiate the session backend singleton
         // This will throw if the module is configured incorrectly
-        SessionBackend.getInstance();
+        await SessionBackend.getInstance();
 
-        return Promise.resolve();
+        return;
     }
 }
