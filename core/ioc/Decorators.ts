@@ -39,42 +39,49 @@ export function provideFactory(token: string): MethodDecorator {
 }
 
 /**
- * Parameterized class decorator that overwrites the static getInstance() function.
+ * Decorator factory for static singleton factory functions.
+ * The returned singleton is stored in the ThreadLocal store if running
+ * in thread-local mode. Subsequent calls to this function will then return
+ * the value from ThreadLocal without invoking the actual factory function,
+ * however, outside of a thread-local call chain, every call will do that.
  *
- * The new imlpementation first tries to retrieve an existing instance
- * from the thread-local store under the key provided. If that fails,
- * it will create a new instance by either calling the constructor or by
- * using the optionally provided factory function.
- * The new instance is stored in the thread-local cache if in thread-local
- * mode.
+ * Arguments on the factory function are not supported since it cannot be
+ * guaranteed that `factory(X) === factory(Y)`, thus when invoked with another
+ * argument, it had to be determined if the singleton needs to change and the
+ * factory needs to be re-executed (paramterized singleton).
  *
- * @param key Thread-local store key
- * @param factory Optional factory used to create instances instead of the classes constructor
- * @return Class decorator
+ * The singleton is kept in thread-local storage with implies that once a thread-local
+ * execution chain has been left, the instance will be garbage collected.
+ *
+ * @param token - The registration token for the thread-local {@link ApplicationContext}
+ * @return Method decorator
  */
-export function threadLocalFactory(key: string, factory?: () => object): Function {
-    return function <T extends { new (...args: any[]): any }>(klass: T) {
-        // Overwrite the existing static getInstance method
-        Object.defineProperty(klass, 'getInstance', {
-            value: function (): T {
-                // Try to retrieve the value from the thread-local store
-                const store = ThreadLocal.getStore() as Map<string, any>;
+export function threadLocalSingleton(token: string): MethodDecorator {
+    return function (
+        target: any,
+        propertyKey: string | symbol,
+        descriptor: TypedPropertyDescriptor<any>
+    ): TypedPropertyDescriptor<any> {
+        const factory = target[propertyKey] as Function;
 
-                if (store) {
-                    const instance = store.get(key);
-
-                    if (instance) {
-                        return instance;
-                    }
-                }
-
-                if (!factory) return new klass();
-
-                return factory() as T;
+        descriptor.value = function (): any {
+            if (!ThreadLocal.active()) {
+                return factory();
             }
-        });
 
-        return klass;
+            // If in thread-local mode, return the instance that is in the thread-local store
+            const stored = ThreadLocal.getStore().get(token);
+
+            if (stored) return stored;
+
+            // At this point, we are running in thread-local but we do not have a cached instance
+            const instance = factory();
+            ThreadLocal.getStore().set(token, instance);
+
+            return instance;
+        };
+
+        return descriptor;
     };
 }
 

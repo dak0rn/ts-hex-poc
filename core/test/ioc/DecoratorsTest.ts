@@ -1,6 +1,6 @@
 import test from 'ava';
 import sinon from 'sinon';
-import { provide, inject, injectable, threadLocalFactory, provideFactory } from '@core/ioc/Decorators';
+import { provide, inject, injectable, provideFactory, threadLocalSingleton } from '@core/ioc/Decorators';
 import { inject as tsInject, injectable as tsInjectable } from 'tsyringe';
 import ApplicationContext from '@core/ioc/ApplicationContext';
 import RootApplicationContext from '@core/ioc/RootApplicationContext';
@@ -82,169 +82,98 @@ test('Decorators.injectable is tsyringe.injectable', t => {
     t.is(injectable, tsInjectable);
 });
 
-test('Decorators.threadLocalFactory overwrites an existing factory method', t => {
-    t.plan(1);
+/// Decorators.threadLocalSingleton
 
-    const factoryFn = function (): Mock {
-        return {} as Mock;
-    };
+test('Decorators.threadLocalSingleton executes singleton factory on first call', t => {
+    t.plan(2);
 
-    @threadLocalFactory('something')
     class Mock {
-        static getInstance = factoryFn;
-    }
+        public static m = new Mock();
 
-    t.true(Mock.getInstance !== factoryFn);
-});
-
-test('Decorators.threadLocalFactory factory returns instance from thread-local cache', t => {
-    t.plan(1);
-
-    @threadLocalFactory('something')
-    class Mock {
+        @threadLocalSingleton('banana')
         static getInstance(): Mock {
-            return new Mock();
+            t.pass();
+            return Mock.m;
         }
     }
-
-    const mockInstance = new Mock();
 
     const sandbox = sinon.createSandbox();
     t.teardown(sandbox.restore.bind(sandbox));
 
-    sandbox.stub(ThreadLocal, 'getStore').returns(
-        new Map<string, any>([['something', mockInstance]])
-    );
+    sandbox.stub(ThreadLocal, 'active').returns(false);
 
     const result = Mock.getInstance();
 
-    t.is(result, mockInstance);
+    t.is(result, Mock.m);
 });
 
-test('Decorators.threadLocalFactory factory creates a new instance if non cached', t => {
+test('Decorators.threadLocalSingleton does not cache singleton if not in thread-local mode', t => {
+    t.plan(4);
+
+    class Mock {
+        @threadLocalSingleton('banana')
+        static getInstance(): Mock {
+            t.pass();
+            return new Mock();
+        }
+    }
+    const sandbox = sinon.createSandbox();
+    t.teardown(sandbox.restore.bind(sandbox));
+
+    sandbox.stub(ThreadLocal, 'active').returns(false);
+
+    const first = Mock.getInstance();
+
+    t.truthy(first);
+    t.not(first, Mock.getInstance());
+});
+
+test('Decorators.threadLocalSingleton caches singleton if in thread-local mode', t => {
     t.plan(3);
 
-    @threadLocalFactory('something')
     class Mock {
-        constructor() {
-            t.pass();
-        }
-
+        @threadLocalSingleton('banana')
         static getInstance(): Mock {
+            t.pass();
             return new Mock();
         }
     }
 
-    const mockInstance = new Mock();
+    const store = new Map<string, any>();
 
     const sandbox = sinon.createSandbox();
     t.teardown(sandbox.restore.bind(sandbox));
 
-    sandbox.stub(ThreadLocal, 'getStore').returns(
-        new Map<string, any>([['anotherkey', mockInstance]])
-    );
+    sandbox.stub(ThreadLocal, 'active').returns(true);
+    sandbox.stub(ThreadLocal, 'getStore').returns(store);
+
+    const first = Mock.getInstance();
+
+    t.truthy(first);
+
+    t.is(store.get('banana'), first);
+});
+
+test('Decorators.threadLocalSingleton returns cached singleton if in thread-local mode', t => {
+    t.plan(1);
+
+    class Mock {
+        @threadLocalSingleton('banana')
+        static getInstance(): Mock {
+            t.fail();
+            return new Mock();
+        }
+    }
+
+    const store = new Map<string, any>([['banana', new Mock()]]);
+
+    const sandbox = sinon.createSandbox();
+    t.teardown(sandbox.restore.bind(sandbox));
+
+    sandbox.stub(ThreadLocal, 'active').returns(true);
+    sandbox.stub(ThreadLocal, 'getStore').returns(store);
 
     const result = Mock.getInstance();
 
-    t.true(result !== mockInstance);
-});
-
-test('Decorators.threadLocalFactory factory creates a new instance if not in thread-local mode', t => {
-    t.plan(1);
-
-    @threadLocalFactory('something')
-    class Mock {
-        constructor() {
-            t.pass();
-        }
-
-        static getInstance(): Mock {
-            return new Mock();
-        }
-    }
-
-    const sandbox = sinon.createSandbox();
-    t.teardown(sandbox.restore.bind(sandbox));
-
-    sandbox.stub(ThreadLocal, 'getStore').returns(dummyMap);
-
-    Mock.getInstance();
-});
-
-test('Decorators.threadLocalFactory factory uses a provided factory function if not in thread-local mode', t => {
-    t.plan(1);
-
-    function create(): Mock {
-        t.pass();
-        return new Mock();
-    }
-
-    @threadLocalFactory('something', create)
-    class Mock {
-        static getInstance(): Mock {
-            t.fail();
-            return new Mock();
-        }
-    }
-
-    const sandbox = sinon.createSandbox();
-    t.teardown(sandbox.restore.bind(sandbox));
-
-    sandbox.stub(ThreadLocal, 'getStore').returns(dummyMap);
-
-    Mock.getInstance();
-});
-
-test('Decorators.threadLocalFactory factory returns instance from thread-local cache with factory function provided', t => {
-    t.plan(1);
-
-    function create(): Mock {
-        t.fail();
-        return new Mock();
-    }
-
-    @threadLocalFactory('something', create)
-    class Mock {
-        constructor() {
-            t.pass();
-        }
-
-        static getInstance(): Mock {
-            t.fail();
-            return new Mock();
-        }
-    }
-
-    const sandbox = sinon.createSandbox();
-    t.teardown(sandbox.restore.bind(sandbox));
-
-    sandbox.stub(ThreadLocal, 'getStore').returns(
-        new Map<string, any>([['something', new Mock()]])
-    );
-
-    Mock.getInstance();
-});
-
-test('Decorators.threadLocalFactory factory creates a new instance using the function provided if non cached', t => {
-    t.plan(1);
-
-    function create(): Mock {
-        t.pass();
-        return new Mock();
-    }
-
-    @threadLocalFactory('something', create)
-    class Mock {
-        static getInstance(): Mock {
-            t.fail();
-            return new Mock();
-        }
-    }
-
-    const sandbox = sinon.createSandbox();
-    t.teardown(sandbox.restore.bind(sandbox));
-
-    sandbox.stub(ThreadLocal, 'getStore').returns(new Map<string, any>());
-
-    Mock.getInstance();
+    t.is(store.get('banana'), result);
 });
