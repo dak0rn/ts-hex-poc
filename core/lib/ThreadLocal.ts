@@ -66,4 +66,13 @@ export default class ThreadLocal {
     public static getStore(): Map<string, any> {
         return defaultStorage.getStore() as Map<string, any>;
     }
+
+    /**
+     * Determines if the current execution is running in thread-local mode
+     *
+     * @return Whether in thread-local
+     */
+    public static active(): boolean {
+        return !!defaultStorage.getStore();
+    }
 }

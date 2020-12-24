@@ -181,3 +181,13 @@ test('ThreadLocal.constructor uses a given Map as state if provided', t => {
 
     new AssertWrapper()._assert();
 });
+
+test('ThreadLocal.active determines if running in thread-local mode', t => {
+    t.plan(2);
+
+    t.false(ThreadLocal.active());
+
+    new ThreadLocal().run(function () {
+        t.true(ThreadLocal.active());
+    });
+});
