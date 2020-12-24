@@ -74,6 +74,9 @@ export default class ApplicationServer extends CoreObject {
 
     /**
      * Loads and launches the configured modules
+     *
+     * @param loader Loader to load modules, defaults to {@link ModuleLoader}
+     * @returns Combined promise resolved with all launch return values (unkknown anyway)
      */
     protected launchModules(loader: ModuleLoader | null = null): Promise<unknown> {
         if (null === loader) {
