@@ -17,6 +17,19 @@ test('ApplicationContext.constructor creates a new ApplicationContext with the r
     t.is(ac.container, tsyringContainer);
 });
 
+test('ApplicationContext.constructor registers itself within the IoC container', t => {
+    t.plan(2);
+
+    const ac = new ApplicationContext(null);
+
+    t.is(ac.resolve('ApplicationContext'), ac);
+
+    const childAc = ac.createChildContext();
+
+    // The child context shadows the parent
+    t.is(childAc.resolve('ApplicationContext'), childAc);
+});
+
 test('ApplicationContext.createChildContext creates a new ApplicationContext with a child IoC container', t => {
     t.plan(2);
 

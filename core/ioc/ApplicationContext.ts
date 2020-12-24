@@ -10,6 +10,8 @@ export default class ApplicationContext {
 
     /**
      * Creates a new application context with the given IoC container.
+     * Registers this {@link ApplicationContext} instance under the name
+     * `ApplicationContext` within the IoC container.
      *
      * @param container IoC container to use. If `null`, will use the root container.
      */
@@ -19,6 +21,8 @@ export default class ApplicationContext {
         } else {
             this.iocContainer = container;
         }
+
+        this.registerValue('ApplicationContext', this);
     }
 
     /**
