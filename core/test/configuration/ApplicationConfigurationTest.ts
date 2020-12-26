@@ -1,5 +1,4 @@
 import ApplicationConfiguration from '@core/configuration/ApplicationConfiguration';
-import { InvalidConfigurationException } from '@core/configuration/Configuration';
 import ConfigurationAdapter from '@core/configuration/ConfigurationAdapter';
 import SystemConfiguration from '@core/configuration/SystemConfiguration';
 import test, { ExecutionContext } from 'ava';
