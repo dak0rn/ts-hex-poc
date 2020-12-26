@@ -1,7 +1,7 @@
 import SystemConfiguration from '@core/configuration/SystemConfiguration';
 import Module from './Module';
 import path from 'path';
-import { ApplicationModule } from '@core/types/modules';
+import { ApplicationModule } from './Module';
 
 const MODULE_ENTRYPOINT = 'index.ts';
 
