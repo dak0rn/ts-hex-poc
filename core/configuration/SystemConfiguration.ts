@@ -56,6 +56,14 @@ export default class SystemConfiguration extends Configuration {
                 'Configuration has declared modules but that key is not an array of strings'
             );
         }
+
+        if (!c.hasOwnProperty('defaultTransactionManager') || 0 === c.defaultTransactionManager.length) {
+            throw new InvalidConfigurationException('No system.defaultTransactionManager declared');
+        }
+
+        if (!c.hasOwnProperty('scan') || !Array.isArray(c.scan) || 0 === c.scan.length) {
+            throw new InvalidConfigurationException('No application folders declared in system.scan');
+        }
     }
 
     /**
@@ -92,6 +100,25 @@ export default class SystemConfiguration extends Configuration {
      */
     log(): string {
         return this.config.log;
+    }
+
+    /**
+     * Returns the default transaction manager to be used when using `@transactional`
+     *
+     * @return Default transaction manager
+     */
+    defaultTransactionManager(): string {
+        return this.config.defaultTransactionManager;
+    }
+
+    /**
+     * Returns the folders to be scanned by a {@link ProjectScanner}
+     * Each folder is an absolute path.
+     *
+     * @return List of folders
+     */
+    projectFolders(): string[] {
+        return this.config.scan.map((folder: string) => this.resolvePathForKey(folder));
     }
 
     /**
