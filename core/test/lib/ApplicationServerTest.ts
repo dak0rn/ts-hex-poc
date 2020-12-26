@@ -10,8 +10,7 @@ import SystemLoggerFactory from '@core/log/SystemLoggerFactory';
 import ApplicationContext from '@core/ioc/ApplicationContext';
 import { constructor } from 'tsyringe/dist/typings/types';
 import ModuleLoader from '@core/module/ModuleLoader';
-import Module from '@core/module/Module';
-import { ApplicationModule } from '@core/types/modules';
+import Module, { ApplicationModule } from '@core/module/Module';
 
 class StubLogAdapter implements LogAdapter {
     info(message: string, ...meta: any[]): void {}
@@ -168,7 +167,7 @@ test('ApplicationServer.startup invokes setup functions', t => {
 });
 
 test('ApplicationServer.launchModules launches modules', t => {
-    t.plan(2);
+    t.plan(4);
 
     let context: MockApplicationContext;
 
@@ -198,9 +197,13 @@ test('ApplicationServer.launchModules launches modules', t => {
             super({} as ApplicationModule);
         }
 
-        launch(ctx: ApplicationContext): Promise<unknown> {
+        async launch(): Promise<unknown> {
+            t.pass();
+            return;
+        }
+
+        prepare(ctx: ApplicationContext): void {
             t.is(ctx, context);
-            return Promise.resolve();
         }
     }
 

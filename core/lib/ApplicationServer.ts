@@ -88,7 +88,8 @@ export default class ApplicationServer extends CoreObject {
         const promises: Promise<unknown>[] = [];
 
         for (const mod of modules) {
-            promises.push(mod.launch(this.ctx!));
+            mod.prepare(this.ctx!);
+            promises.push(mod.launch());
         }
 
         return Promise.all(promises);
