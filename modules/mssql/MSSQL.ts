@@ -1,9 +1,11 @@
 import ApplicationConfiguration from '@core/configuration/ApplicationConfiguration';
+import { TransactionManagerRegistry } from '@core/io/datastores/TransactionManagerRegistry';
 import ApplicationContext from '@core/ioc/ApplicationContext';
 import { injectable, inject, threadLocalSingleton } from '@core/ioc/Decorators';
 import SystemLogger from '@core/log/SystemLogger';
-import { ApplicationModuleLauncher } from '@core/types/modules';
+import { ApplicationModuleLauncher } from '@core/module/Module';
 import knex from 'knex';
+import { MSSQLTransactionManager } from './MSSQLTransactionManager';
 
 export class DatabaseURLNotDefinedError extends Error {
     constructor() {
@@ -48,6 +50,10 @@ export default class MSSQL implements ApplicationModuleLauncher {
         this.ctx.registerValue('MSSQLConnection', connection);
 
         return;
+    }
+
+    public prepare(): void {
+        TransactionManagerRegistry.getInstance().register(new MSSQLTransactionManager());
     }
 
     protected async verifyConnection(connection: knex): Promise<void> {
