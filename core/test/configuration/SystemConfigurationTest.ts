@@ -4,6 +4,17 @@ import ConfigurationAdapter from '@core/configuration/ConfigurationAdapter';
 import SystemConfiguration, { ExecutionEnvironment } from '@core/configuration/SystemConfiguration';
 import test, { ExecutionContext } from 'ava';
 
+function validSystemConfiguration(): any {
+    return {
+        moduleFolder: 'test',
+        modules: [],
+        environment: 'development',
+        log: 'winston',
+        defaultTransactionManager: 'something',
+        scan: ['something']
+    };
+}
+
 class StubAdapter extends ConfigurationAdapter {
     system(): SystemConfiguration {
         throw new Error('Method not implemented.');
@@ -74,16 +85,18 @@ test('SystemConfiguration.validate throws if environment is not set', t => {
 test('SystemConfiguration.validate throws if environment is set but invalid', t => {
     t.plan(3);
 
+    const config = validSystemConfiguration();
+
     t.notThrows(function () {
         new SystemConfiguration(
-            { moduleFolder: 'test', modules: [], environment: 'production', log: 'winston' },
+            Object.assign({}, config, { environment: 'production' }),
             new StubAdapter('')
         ).validate();
     });
 
     t.notThrows(function () {
         new SystemConfiguration(
-            { moduleFolder: 'test', modules: [], environment: 'development', log: 'winston' },
+            Object.assign({}, config, { environment: 'development' }),
             new StubAdapter('')
         ).validate();
     });
@@ -91,7 +104,7 @@ test('SystemConfiguration.validate throws if environment is set but invalid', t 
     t.throws(
         function () {
             new SystemConfiguration(
-                { moduleFolder: 'test', modules: [], environment: 'banana', log: 'winston' },
+                Object.assign({}, config, { environment: 'banana' }),
                 new StubAdapter('')
             ).validate();
         },
@@ -102,43 +115,26 @@ test('SystemConfiguration.validate throws if environment is set but invalid', t 
 test('SystemConfiguration.validate does not throw for valid configuration', t => {
     t.plan(1);
 
-    const valid = {
-        moduleFolder: 'test',
-        modules: [],
-        environment: 'production',
-        log: 'winston'
-    };
-
-    const sc = new SystemConfiguration(valid, new StubAdapter(''));
+    const sc = new SystemConfiguration(validSystemConfiguration(), new StubAdapter(''));
 
     t.notThrows(sc.validate.bind(sc));
 });
 
 /// SytemConfiguration.get
 test('SystemConfiguration.get returns the correct items for simple paths', (t: ExecutionContext) => {
-    t.plan(1);
+    t.plan(2);
 
-    const valid = {
-        moduleFolder: 'test',
-        modules: [],
-        environment: 'production',
-        log: 'winston'
-    };
-
-    const sc = new SystemConfiguration(valid, new StubAdapter(''));
+    const sc = new SystemConfiguration(validSystemConfiguration(), new StubAdapter(''));
 
     t.is(sc.get('moduleFolder'), 'test');
+    t.is(sc.get('log'), 'winston');
 });
 
 test('SystemConfiguration.get returns the correct items for nested paths', (t: ExecutionContext) => {
     t.plan(1);
 
-    const valid = {
-        moduleFolder: 'test',
-        modules: ['target'],
-        environment: 'production',
-        log: 'winston'
-    };
+    const valid = validSystemConfiguration();
+    valid.modules.push('target');
 
     const sc = new SystemConfiguration(valid, new StubAdapter(''));
 
@@ -148,9 +144,7 @@ test('SystemConfiguration.get returns the correct items for nested paths', (t: E
 test('SystemConfiguration.get throws if a value does not exist', (t: ExecutionContext) => {
     t.plan(1);
 
-    const data = {};
-
-    const sc = new SystemConfiguration(data, new StubAdapter(''));
+    const sc = new SystemConfiguration(validSystemConfiguration(), new StubAdapter(''));
 
     t.throws(sc.get.bind(sc, 'a.b.c'));
 });
@@ -160,13 +154,7 @@ test('SystemConfiguration.get throws if a value does not exist', (t: ExecutionCo
 test('SystemConfiguration.moduleFolder returns the moduleFolder from the config provided', (t: ExecutionContext) => {
     t.plan(1);
 
-    const valid = {
-        moduleFolder: 'test',
-        environment: 'production',
-        log: 'winston'
-    };
-
-    const sc = new SystemConfiguration(valid, new StubAdapter(''));
+    const sc = new SystemConfiguration(validSystemConfiguration(), new StubAdapter(''));
 
     t.is(sc.moduleFolder(), 'test');
 });
@@ -176,12 +164,8 @@ test('SystemConfiguration.moduleFolder returns the moduleFolder from the config 
 test('SystemConfiguration.modules returns the module list from the configuration', (t: ExecutionContext) => {
     t.plan(1);
 
-    const valid = {
-        moduleFolder: 'test',
-        modules: ['web', 'database', 'testing'],
-        environment: 'production',
-        log: 'winston'
-    };
+    const valid = validSystemConfiguration();
+    valid.modules = ['web', 'database', 'testing'];
 
     const sc = new SystemConfiguration(valid, new StubAdapter(''));
 
@@ -193,12 +177,8 @@ test('SystemConfiguration.modules returns the module list from the configuration
 test('SystemConfiguration.environment returns the given environments: production', (t: ExecutionContext) => {
     t.plan(1);
 
-    let valid = {
-        moduleFolder: 'test',
-        modules: ['web', 'database', 'testing'],
-        environment: 'production',
-        log: 'winston'
-    };
+    let valid = validSystemConfiguration();
+    valid.environment = 'production';
 
     let sc = new SystemConfiguration(valid, new StubAdapter(''));
 
@@ -208,12 +188,8 @@ test('SystemConfiguration.environment returns the given environments: production
 test('SystemConfiguration.environment returns the given environments: development', (t: ExecutionContext) => {
     t.plan(1);
 
-    let valid = {
-        moduleFolder: 'test',
-        modules: ['web', 'database', 'testing'],
-        environment: 'development',
-        log: 'winston'
-    };
+    let valid = validSystemConfiguration();
+    valid.environment = 'development';
 
     let sc = new SystemConfiguration(valid, new StubAdapter(''));
 
@@ -222,17 +198,10 @@ test('SystemConfiguration.environment returns the given environments: developmen
 
 /// SystemConfiguration.log
 
-test('SystemConfiguration.log returns the set logger', (t: ExecutionContext) => {
+test('SystemConfiguration.log returns the configured logger', (t: ExecutionContext) => {
     t.plan(1);
 
-    const valid = {
-        moduleFolder: 'test',
-        modules: ['web', 'database', 'testing'],
-        environment: 'production',
-        log: 'winston'
-    };
-
-    const sc = new SystemConfiguration(valid, new StubAdapter(''));
+    const sc = new SystemConfiguration(validSystemConfiguration(), new StubAdapter(''));
 
     t.is(sc.log(), 'winston');
 });
@@ -242,13 +211,8 @@ test('SystemConfiguration.log returns the set logger', (t: ExecutionContext) => 
 test('SystemConfiguration.resolvePathForKey returns an absolute path as is', t => {
     t.plan(1);
 
-    const valid = {
-        moduleFolder: 'test',
-        modules: ['web', 'database', 'testing'],
-        environment: 'production',
-        log: 'winston',
-        target: '/usr/share/config.yaml'
-    };
+    const valid = validSystemConfiguration();
+    valid.target = '/usr/share/config.yaml';
 
     const sc = new SystemConfiguration(valid, new StubAdapter(''));
     sc.applicationPath = '/tmp';
@@ -259,16 +223,11 @@ test('SystemConfiguration.resolvePathForKey returns an absolute path as is', t =
 test('SystemConfiguration.resolvePathForKey returns a relative path resolved to applicationPath', t => {
     t.plan(1);
 
-    const valid = {
-        moduleFolder: 'test',
-        modules: ['web', 'database', 'testing'],
-        environment: 'production',
-        log: 'winston',
-        target: 'a'
-    };
+    const valid = validSystemConfiguration();
+    valid.target = 'usr/share/config.yaml';
 
     const sc = new SystemConfiguration(valid, new StubAdapter(''));
     sc.applicationPath = '/tmp';
 
-    t.is(sc.resolvePathForKey('target'), '/tmp/a');
+    t.is(sc.resolvePathForKey('target'), '/tmp/usr/share/config.yaml');
 });
