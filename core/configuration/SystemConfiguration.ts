@@ -118,7 +118,7 @@ export default class SystemConfiguration extends Configuration {
      * @return List of folders
      */
     projectFolders(): string[] {
-        return this.config.scan.map((folder: string) => this.resolvePathForKey(folder));
+        return this.config.scan.map((folder: string) => this.resolvePath(folder));
     }
 
     /**
@@ -127,11 +127,18 @@ export default class SystemConfiguration extends Configuration {
      *
      * Does not check for types from values return, so it will break for non-strings.
      *
-     * @param {string} key Path as used with {@link Configuration#get}
+     * @param key Path as used with {@link Configuration#get}
      */
     resolvePathForKey(key: string): string {
-        const value = this.get(key);
+        return this.resolvePath(this.get(key));
+    }
 
+    /**
+     * Resolves the given path relative to the {@link #applicationPath}
+     *
+     * @param value Path to resolve
+     */
+    public resolvePath(value: string): string {
         if (path.isAbsolute(value)) return value;
 
         return path.resolve(this.applicationPath, value);

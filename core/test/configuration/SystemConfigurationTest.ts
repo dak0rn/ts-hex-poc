@@ -120,6 +120,39 @@ test('SystemConfiguration.validate does not throw for valid configuration', t =>
     t.notThrows(sc.validate.bind(sc));
 });
 
+test('SystemConfiguration.validate throws if defaultTransactionManager is not set', t => {
+    t.plan(1);
+
+    const valid = validSystemConfiguration();
+    delete valid.defaultTransactionManager;
+
+    const sc = new SystemConfiguration(valid, new StubAdapter(''));
+
+    t.throws(sc.validate.bind(sc), { instanceOf: InvalidConfigurationException });
+});
+
+test('SystemConfiguration.validate throws if scan is not set', t => {
+    t.plan(1);
+
+    const valid = validSystemConfiguration();
+    delete valid.scan;
+
+    const sc = new SystemConfiguration(valid, new StubAdapter(''));
+
+    t.throws(sc.validate.bind(sc), { instanceOf: InvalidConfigurationException });
+});
+
+test('SystemConfiguration.validate throws if scan is empty', t => {
+    t.plan(1);
+
+    const valid = validSystemConfiguration();
+    valid.scan = [];
+
+    const sc = new SystemConfiguration(valid, new StubAdapter(''));
+
+    t.throws(sc.validate.bind(sc), { instanceOf: InvalidConfigurationException });
+});
+
 /// SytemConfiguration.get
 test('SystemConfiguration.get returns the correct items for simple paths', (t: ExecutionContext) => {
     t.plan(2);
@@ -230,4 +263,54 @@ test('SystemConfiguration.resolvePathForKey returns a relative path resolved to 
     sc.applicationPath = '/tmp';
 
     t.is(sc.resolvePathForKey('target'), '/tmp/usr/share/config.yaml');
+});
+
+/// SystemConfiguration.resolvePath
+test('SystemConfiguration.resolvePath returns an absolute path as is', t => {
+    t.plan(1);
+
+    const sc = new SystemConfiguration(validSystemConfiguration(), new StubAdapter(''));
+    sc.applicationPath = '/tmp';
+
+    t.is(sc.resolvePath('/usr/share/config.yaml'), '/usr/share/config.yaml');
+});
+
+test('SystemConfiguration.resolvePath returns a relative path relative to applicationPath', t => {
+    t.plan(1);
+
+    const sc = new SystemConfiguration(validSystemConfiguration(), new StubAdapter(''));
+    sc.applicationPath = '/tmp';
+
+    t.is(sc.resolvePath('usr/share/config.yaml'), '/tmp/usr/share/config.yaml');
+});
+
+/// SystemConfiguration.defaultTransactionManager
+
+test('SystemConfiguration.defaultTransactionManager returns the default transaction manager configured', t => {
+    t.plan(1);
+
+    const valid = validSystemConfiguration();
+    valid.defaultTransactionManager = 'pineapple';
+
+    const sc = new SystemConfiguration(valid, new StubAdapter(''));
+
+    t.is(sc.defaultTransactionManager(), 'pineapple');
+});
+
+/// SystemConfiguration.projectFolders
+
+test('SystemConfiguration.projectFolders returns a list of absolute paths', t => {
+    t.plan(3);
+
+    const valid = validSystemConfiguration();
+    valid.scan = ['a', 'b/c', '/d'];
+
+    const sc = new SystemConfiguration(valid, new StubAdapter(''));
+    sc.applicationPath = '/tmp';
+
+    const folders = sc.projectFolders();
+
+    t.is(folders[0], '/tmp/a');
+    t.is(folders[1], '/tmp/b/c');
+    t.is(folders[2], '/d');
 });
