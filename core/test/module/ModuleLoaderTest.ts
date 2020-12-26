@@ -4,8 +4,7 @@ import ModuleLoader, { ModuleLoadingFailedException } from '@core/module/ModuleL
 import ConfigurationAdapter from '@core/configuration/ConfigurationAdapter';
 import SystemConfiguration from '@core/configuration/SystemConfiguration';
 import ApplicationConfiguration from '@core/configuration/ApplicationConfiguration';
-import { ApplicationModule } from '@core/types/modules';
-import Module from '@core/module/Module';
+import Module, { ApplicationModule } from '@core/module/Module';
 
 class StubAdapter extends ConfigurationAdapter {
     system(): SystemConfiguration {
