@@ -1,9 +1,8 @@
 import test from 'ava';
 import sinon from 'sinon';
-import Module from '@core/module/Module';
+import Module, { ApplicationModule, ApplicationModuleLauncher } from '@core/module/Module';
 import ApplicationContext from '@core/ioc/ApplicationContext';
 import { constructor } from 'tsyringe/dist/typings/types';
-import { ApplicationModule, ApplicationModuleLauncher } from '@core/types/modules';
 
 const DummyModule = {
     getClass(): { new (...args: any[]): any } {
@@ -30,14 +29,16 @@ test("Module.getClass calls module's getClass()", t => {
 });
 
 /// Module.launch
-test("Module.launch invokes the module's launch method", t => {
+test("Module.launch invokes the module's launch method", async t => {
     t.plan(3);
 
     class MockLauncher implements ApplicationModuleLauncher {
-        launch(): Promise<unknown> {
+        prepare(): void {}
+
+        async launch(): Promise<unknown> {
             t.pass();
 
-            return Promise.resolve();
+            return;
         }
     }
 
@@ -63,14 +64,54 @@ test("Module.launch invokes the module's launch method", t => {
             t.pass();
             return MockLauncher;
         }
+    }
 
-        _execute() {
-            this.launch(new MockApplicationContext());
+    const mm = new MockModule();
+    mm.prepare(new MockApplicationContext());
+    await mm.launch();
+});
+
+/// Module.prepare
+test("Module.prepare invokes the module's prepare method", t => {
+    t.plan(3);
+
+    class MockLauncher implements ApplicationModuleLauncher {
+        prepare(): void {
+            t.pass();
+        }
+
+        async launch(): Promise<unknown> {
+            t.fail();
+            return;
+        }
+    }
+
+    class MockApplicationContext extends ApplicationContext {
+        constructor() {
+            super(null);
+        }
+
+        registerValue(key: string, value: any): void {}
+        register<T>(key: string, value: constructor<T>): void {}
+        resolve(key: any): any {
+            t.is(key, MockLauncher);
+            return new MockLauncher();
+        }
+    }
+
+    class MockModule extends Module {
+        constructor() {
+            super(DummyModule as ApplicationModule);
+        }
+
+        getClass(): { new (...args: any[]): any } {
+            t.pass();
+            return MockLauncher;
         }
     }
 
     const mm = new MockModule();
-    mm._execute();
+    mm.prepare(new MockApplicationContext());
 });
 
 /// Module.getApplicationModule
