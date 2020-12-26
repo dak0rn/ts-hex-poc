@@ -1,11 +1,12 @@
-import { ApplicationContext } from '@core';
 import ApplicationConfiguration from '@core/configuration/ApplicationConfiguration';
+import ApplicationContext from '@core/ioc/ApplicationContext';
 import BaseSession from './BaseSession';
 
 /**
  * Error indicating that no session backend was configured in the application configuration
  */
 export class SessionBackendNotConfiguredError extends Error {
+    /* istanbul ignore next */
     constructor() {
         super('No session backend has been configured in session.backend');
     }
@@ -15,6 +16,7 @@ export class SessionBackendNotConfiguredError extends Error {
  * Error indicating that the configured session backend does not exist
  */
 export class SessionBackendNotSupportedError extends Error {
+    /* istanbul ignore next */
     constructor(backend: string) {
         super(`The configured session backend "${backend}" is not supported`);
     }
@@ -32,6 +34,7 @@ export interface AvailableBackends {
 /**
  * Lookup table for available session backends
  */
+/* istanbul ignore next */
 export const availableBackends: AvailableBackends = {
     memory: () => require('./backends/MemoryBackend').default,
     redis: () => require('./backends/RedisBackend').default

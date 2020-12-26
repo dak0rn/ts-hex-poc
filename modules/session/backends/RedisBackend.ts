@@ -1,9 +1,9 @@
 import ioredis from 'ioredis';
-import { injectable, inject } from '@core';
 import BaseSession from '../BaseSession';
 import SessionBackend from '../SessionBackend';
 import ApplicationConfiguration from '@core/configuration/ApplicationConfiguration';
 import SystemLogger from '@core/log/SystemLogger';
+import { inject, injectable } from '@core/ioc/Decorators';
 
 export class RedisSessionBackendMisconfiguredError extends Error {}
 

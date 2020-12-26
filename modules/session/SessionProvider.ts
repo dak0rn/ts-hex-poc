@@ -1,5 +1,6 @@
-import { injectable, inject, ApplicationContext } from '@core';
-import { ApplicationModuleLauncher } from '@core/types/modules';
+import ApplicationContext from '@core/ioc/ApplicationContext';
+import { inject, injectable } from '@core/ioc/Decorators';
+import { ApplicationModuleLauncher } from '@core/module/Module';
 import SessionBackend from './SessionBackend';
 
 @injectable()
@@ -10,7 +11,10 @@ export default class SessionProvider implements ApplicationModuleLauncher {
         this.ctx = ctx;
     }
 
-    async launch(): Promise<unknown> {
+    /* istanbul ignore next */
+    public prepare(): void {}
+
+    public async launch(): Promise<unknown> {
         // Instantiate the session backend singleton
         // This will throw if the module is configured incorrectly
         await SessionBackend.getInstance();

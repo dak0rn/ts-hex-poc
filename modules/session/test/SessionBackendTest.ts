@@ -5,7 +5,11 @@ import ApplicationContext from '@core/ioc/ApplicationContext';
 import ApplicationConfiguration from '@core/configuration/ApplicationConfiguration';
 import ConfigurationAdapter from '@core/configuration/ConfigurationAdapter';
 import SystemConfiguration from '@core/configuration/SystemConfiguration';
-import SessionBackend, { availableBackends } from '../SessionBackend';
+import SessionBackend, {
+    availableBackends,
+    SessionBackendNotConfiguredError,
+    SessionBackendNotSupportedError
+} from '../SessionBackend';
 import BaseSession from '../BaseSession';
 
 class StubAdapter extends ConfigurationAdapter {
@@ -42,8 +46,8 @@ test.beforeEach(function () {
     AccessSessionBackend.__reset();
 });
 
-test.serial('SessionBackend.getInstance throws if no session backend is configured', async t => {
-    t.plan(1);
+test.serial('SessionBackend.getInstance throws if it cannot access session key', async t => {
+    t.plan(2);
 
     // Create an empty application configuration
     const ac = new ApplicationContext(container.createChildContainer());
@@ -51,9 +55,55 @@ test.serial('SessionBackend.getInstance throws if no session backend is configur
 
     ac.registerValue('ApplicationConfiguration', conf);
 
-    await t.throwsAsync(async function () {
+    const sandbox = sinon.createSandbox();
+    sandbox.stub(ApplicationContext, 'getInstance').returns(ac);
+    t.teardown(sandbox.restore.bind(sandbox));
+
+    const err = await t.throwsAsync(async function (): Promise<any> {
         await SessionBackend.getInstance();
     });
+
+    t.true(err instanceof SessionBackendNotConfiguredError);
+});
+
+test.serial('SessionBackend.getInstance throws if no backend is configued', async t => {
+    t.plan(2);
+
+    // Create an empty application configuration
+    const ac = new ApplicationContext(container.createChildContainer());
+    const conf = new ApplicationConfiguration({ session: {} }, new StubAdapter());
+
+    ac.registerValue('ApplicationConfiguration', conf);
+
+    const sandbox = sinon.createSandbox();
+    sandbox.stub(ApplicationContext, 'getInstance').returns(ac);
+    t.teardown(sandbox.restore.bind(sandbox));
+
+    const err = await t.throwsAsync(async function (): Promise<any> {
+        await SessionBackend.getInstance();
+    });
+
+    t.true(err instanceof SessionBackendNotConfiguredError);
+});
+
+test.serial('SessionBackend.getInstance throws configured backend does not exist', async t => {
+    t.plan(2);
+
+    // Create an empty application configuration
+    const ac = new ApplicationContext(container.createChildContainer());
+    const conf = new ApplicationConfiguration({ session: { backend: 'banana!' } }, new StubAdapter());
+
+    ac.registerValue('ApplicationConfiguration', conf);
+
+    const sandbox = sinon.createSandbox();
+    sandbox.stub(ApplicationContext, 'getInstance').returns(ac);
+    t.teardown(sandbox.restore.bind(sandbox));
+
+    const err = await t.throwsAsync(async function (): Promise<any> {
+        await SessionBackend.getInstance();
+    });
+
+    t.true(err instanceof SessionBackendNotSupportedError);
 });
 
 test.serial('SessionBackend.getInstance creates a new backend as configured', async t => {
