@@ -1,6 +1,6 @@
 import { injectable, inject } from '@core/ioc/Decorators';
 import SystemLogger from '@core/log/SystemLogger';
-import { ApplicationModuleLauncher } from '@core/types/modules';
+import { ApplicationModuleLauncher } from '@core/module/Module';
 
 @injectable()
 export default class WebServer implements ApplicationModuleLauncher {
@@ -10,7 +10,9 @@ export default class WebServer implements ApplicationModuleLauncher {
         this.log = log;
     }
 
-    launch(): Promise<unknown> {
+    public prepare(): void {}
+
+    public launch(): Promise<unknown> {
         return new Promise(resolve => {
             this.log.info('Starting the web server...');
 
