@@ -24,7 +24,7 @@ test('ProjectScanner.constructor sets correct defaults', t => {
 });
 
 test('ProjectScanner.scanAndLoad retrieves a list of files and loads them', t => {
-    t.plan(17);
+    t.plan(20);
 
     const sc = {
         projectFolders(): string[] {
@@ -85,6 +85,7 @@ test('ProjectScanner.scanAndLoad retrieves a list of files and loads them', t =>
         const { files, dir } = testbed(globIdx++);
 
         t.is(options.cwd, dir);
+        t.true(options.absolute);
         t.is(path, `**/*.ts`);
 
         return files.map(f => `${dir}/${f}`);

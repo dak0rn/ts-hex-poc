@@ -48,7 +48,7 @@ export class ProjectScanner extends CoreObject {
         let filesToload: string[] = [];
 
         for (const folder of folders) {
-            filesToload = filesToload.concat(this.glob(`**/*.ts`, { cwd: folder }));
+            filesToload = filesToload.concat(this.glob(`**/*.ts`, { cwd: folder, absolute: true }));
         }
 
         // Require each file
