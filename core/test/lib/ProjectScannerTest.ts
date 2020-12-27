@@ -102,3 +102,15 @@ test('ProjectScanner.scanAndLoad retrieves a list of files and loads them', t =>
     const mock = new MockProjectScanner();
     mock.scanAndLoad();
 });
+
+/// ProjectScanner.create
+
+test('ProjectScanner.create creates a new ProjectScanner', t => {
+    t.plan(1);
+
+    const sc = {} as SystemConfiguration;
+
+    const sut = ProjectScanner.create(sc);
+
+    t.is(sut.configuration, sc);
+});

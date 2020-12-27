@@ -11,6 +11,7 @@ import ApplicationContext from '@core/ioc/ApplicationContext';
 import { constructor } from 'tsyringe/dist/typings/types';
 import ModuleLoader from '@core/module/ModuleLoader';
 import Module, { ApplicationModule } from '@core/module/Module';
+import { ProjectScanner } from '@core/lib/ProjectScanner';
 
 class StubLogAdapter implements LogAdapter {
     info(message: string, ...meta: any[]): void {}
@@ -125,7 +126,7 @@ test('ApplicationServer.assemble correctly assembles the application context', t
 });
 
 test('ApplicationServer.startup invokes setup functions', t => {
-    t.plan(2);
+    t.plan(3);
 
     class MockApplicationContext extends ApplicationContext {
         constructor() {
@@ -153,6 +154,10 @@ test('ApplicationServer.startup invokes setup functions', t => {
         protected launchModules(): Promise<unknown> {
             t.pass();
             return Promise.resolve();
+        }
+
+        protected discoverProjectFiles(): void {
+            t.pass();
         }
     }
 
@@ -297,4 +302,39 @@ test('ApplicationServer.launchModules constructs its own loader if not provided'
     const mas = new MockApplicationServer();
 
     mas._execute(context);
+});
+
+/// ApplicationServer.discoverProjectFiles
+
+test('ApplicationServer.discoverProjectFiles uses a scanner to load project files', t => {
+    t.plan(3);
+
+    const sc = {} as SystemConfiguration;
+
+    class MockProjectScanner extends ProjectScanner {
+        public scanAndLoad(): void {
+            t.pass();
+        }
+    }
+
+    class MockApplicationServer extends ApplicationServer {
+        public constructor() {
+            super();
+        }
+
+        __assert() {
+            this.discoverProjectFiles(sc);
+        }
+    }
+
+    const sandbox = sinon.createSandbox();
+    t.teardown(sandbox.restore.bind(sandbox));
+
+    const spy = sandbox.stub(ProjectScanner, 'create').returns(new MockProjectScanner(sc));
+
+    const mas = new MockApplicationServer();
+    mas.__assert();
+
+    t.is(spy.callCount, 1);
+    t.is(spy.firstCall.firstArg, sc);
 });

@@ -6,6 +6,7 @@ import ModuleLoader from '@core/module/ModuleLoader';
 import CoreObject from '@core/shared/CoreObject';
 import path from 'path';
 import ConfigurationFactory from '../configuration/ConfigurationFactory';
+import { ProjectScanner } from './ProjectScanner';
 
 // TODO: Replace with CLI options
 /* istanbul ignore next */
@@ -96,6 +97,16 @@ export default class ApplicationServer extends CoreObject {
     }
 
     /**
+     * Uses the {@link ProjectScanner} to find and load project files
+     *
+     * @param config System configuration
+     */
+    protected discoverProjectFiles(config: SystemConfiguration): void {
+        const scanner = ProjectScanner.create(config);
+        scanner.scanAndLoad();
+    }
+
+    /**
      * Starts the application server and eventually also the application using it
      */
     public async startup(): Promise<unknown> {
@@ -104,6 +115,9 @@ export default class ApplicationServer extends CoreObject {
 
         this.assembleContext(CONFIG_FILE);
         const log = this.ctx!.resolve('SystemLogger') as SystemLogger;
+
+        log.debug('Loading project files...');
+        this.discoverProjectFiles(this.ctx!.resolve('SystemConfiguration') as SystemConfiguration);
 
         log.debug('Resolving modules...');
 

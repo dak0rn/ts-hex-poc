@@ -56,4 +56,26 @@ export class ProjectScanner extends CoreObject {
             this.loader(file);
         }
     }
+
+    /**
+     * Creates a new {@link ProjectScanner} with the given configuration.
+     *
+     * At the moment, this is a wrapper used to make the {@link ApplicationServer} better
+     * testable, however, in the future this might be extended with different types of
+     * loaders and more configuration.
+     *
+     * @param config System configuration
+     */
+    public static create(config: SystemConfiguration): ProjectScanner {
+        return new ProjectScanner(config);
+    }
+
+    /**
+     * Returns the {@link SystemConfiguration} used by this {@link ProjectScanner}
+     *
+     * @return {@link SystemConfiguration}
+     */
+    public get configuration(): SystemConfiguration {
+        return this.conf;
+    }
 }
