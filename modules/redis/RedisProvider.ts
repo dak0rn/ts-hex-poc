@@ -7,13 +7,34 @@ import ioredis from 'ioredis';
 import CoreObject from '@core/shared/CoreObject';
 import { RedisAdapter } from './RedisAdapter';
 
+/**
+ * No `redis.url` configuration parameter was set in the configuration file
+ */
+export class NoRedisConnectionError extends Error {
+    constructor() {
+        super('Configuration parameter redis.url not set in configuration file');
+    }
+}
+
+/**
+ * Module provider for redis
+ */
 @injectable()
 export class RedisProvider extends CoreObject implements ApplicationModuleLauncher {
+    /**
+     * The connection constructor, defaulting to `ioredis`
+     * This is exposed in order to make it configurable for testing and should usually
+     * not be changed.
+     */
     public static redisClass: { new (...args: any[]): any } = ioredis;
 
     protected ctx: ApplicationContext;
     protected ac: ApplicationConfiguration;
     protected log: SystemLogger;
+
+    /**
+     * The redis connection string
+     */
     protected url: string | null;
 
     constructor(
@@ -39,10 +60,17 @@ export class RedisProvider extends CoreObject implements ApplicationModuleLaunch
     }
 
     prepare(): void {
-        const redisURL = this.ac.get('redis.url') as string;
+        let redisUrl: string;
+        try {
+            redisUrl = this.ac.get('redis.url') as string;
+        } catch (_) {
+            throw new NoRedisConnectionError();
+        }
 
-        if (!redisURL) throw new Error('');
+        if (!redisUrl) {
+            throw new NoRedisConnectionError();
+        }
 
-        this.url = redisURL;
+        this.url = redisUrl;
     }
 }
