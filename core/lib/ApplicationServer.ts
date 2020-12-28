@@ -66,10 +66,10 @@ export default class ApplicationServer extends CoreObject {
         // IoC container
         this.ctx = ApplicationContext.getRootInstance();
 
-        this.ctx.registerValue('SystemConfiguration', sc);
-        this.ctx.registerValue('ApplicationConfiguration', ac);
-        this.ctx.registerValue('SystemLogger', log);
-        this.ctx.registerValue('core.DEV', sc.environment() === ExecutionEnvironment.Development)
+        this.ctx.registerValue('core.SystemConfiguration', sc);
+        this.ctx.registerValue('core.ApplicationConfiguration', ac);
+        this.ctx.registerValue('core.SystemLogger', log);
+        this.ctx.registerValue('core.DEV', sc.environment() === ExecutionEnvironment.Development);
 
         // The context is registered within itself under ApplicationContext automatically
     }
@@ -82,7 +82,7 @@ export default class ApplicationServer extends CoreObject {
      */
     protected launchModules(loader: ModuleLoader | null = null): Promise<unknown> {
         if (null === loader) {
-            const config = this.ctx!.resolve('SystemConfiguration') as SystemConfiguration;
+            const config = this.ctx!.resolve('core.SystemConfiguration') as SystemConfiguration;
             loader = new ModuleLoader(config);
         }
 
@@ -115,10 +115,10 @@ export default class ApplicationServer extends CoreObject {
         console.log('Using configuration file: ', CONFIG_FILE);
 
         this.assembleContext(CONFIG_FILE);
-        const log = this.ctx!.resolve('SystemLogger') as SystemLogger;
+        const log = this.ctx!.resolve('core.SystemLogger') as SystemLogger;
 
         log.debug('Loading project files...');
-        this.discoverProjectFiles(this.ctx!.resolve('SystemConfiguration') as SystemConfiguration);
+        this.discoverProjectFiles(this.ctx!.resolve('core.SystemConfiguration') as SystemConfiguration);
 
         log.debug('Resolving modules...');
 

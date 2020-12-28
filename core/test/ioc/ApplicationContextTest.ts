@@ -30,7 +30,7 @@ test('ApplicationContext.constructor registers itself within the IoC container u
     const ac = new ApplicationContext(null);
 
     t.is(spy.callCount, 1);
-    t.is(spy.firstCall.firstArg, 'ApplicationContext');
+    t.is(spy.firstCall.firstArg, 'core.ApplicationContext');
     t.deepEqual(spy.firstCall.lastArg, { useFactory: ApplicationContext.getInstance });
 });
 
@@ -229,7 +229,7 @@ test('ApplicationContext.getInstance caches child in thread-local store under "A
 
     const instance = ApplicationContext.getInstance();
 
-    t.is(store.get('ApplicationContext'), instance);
+    t.is(store.get('core.ApplicationContext'), instance);
 });
 
 test('ApplicationContext.getInstance uses a cached instance', t => {
@@ -240,7 +240,7 @@ test('ApplicationContext.getInstance uses a cached instance', t => {
 
     const mock = new ApplicationContext(null);
 
-    const store = new Map<string, any>([['ApplicationContext', mock]]);
+    const store = new Map<string, any>([['core.ApplicationContext', mock]]);
 
     sandbox.stub(ThreadLocal, 'active').returns(true);
     sandbox.stub(ThreadLocal, 'getStore').returns(store);

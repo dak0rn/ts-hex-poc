@@ -13,7 +13,7 @@ import ApplicationContext from '@core/ioc/ApplicationContext';
 export class SessionMiddleware extends Middleware {
     protected ctx: ApplicationContext;
 
-    constructor(@inject('ApplicationContext') ctx: ApplicationContext) {
+    constructor(@inject('core.ApplicationContext') ctx: ApplicationContext) {
         super();
 
         this.ctx = ctx;

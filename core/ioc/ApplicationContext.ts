@@ -27,7 +27,7 @@ export default class ApplicationContext extends CoreObject {
             this.iocContainer = container;
         }
 
-        this.container.register('ApplicationContext', { useFactory: ApplicationContext.getInstance });
+        this.container.register('core.ApplicationContext', { useFactory: ApplicationContext.getInstance });
     }
 
     /**
@@ -90,7 +90,7 @@ export default class ApplicationContext extends CoreObject {
      *
      * @return Thread-local aware singleton
      */
-    @threadLocalSingleton('ApplicationContext')
+    @threadLocalSingleton('core.ApplicationContext')
     public static getInstance(): ApplicationContext {
         // The instance caching is done by @threadLocalSingleton
 

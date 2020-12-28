@@ -11,7 +11,7 @@ export class WebServer implements ApplicationModuleLauncher {
     protected server: Express | null;
     protected ctrl: FrontController;
 
-    constructor(@inject('SystemLogger') log: SystemLogger, @inject('http.FrontController') ctrl: FrontController) {
+    constructor(@inject('core.SystemLogger') log: SystemLogger, @inject('http.FrontController') ctrl: FrontController) {
         this.log = log.createChild('HTTP');
         this.server = null;
         this.ctrl = ctrl;

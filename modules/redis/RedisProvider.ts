@@ -17,9 +17,9 @@ export class RedisProvider extends CoreObject implements ApplicationModuleLaunch
     protected url: string | null;
 
     constructor(
-        @inject('ApplicationContext') ctx: ApplicationContext,
-        @inject('ApplicationConfiguration') ac: ApplicationConfiguration,
-        @inject('SystemLogger') log: SystemLogger
+        @inject('core.ApplicationContext') ctx: ApplicationContext,
+        @inject('core.ApplicationConfiguration') ac: ApplicationConfiguration,
+        @inject('core.SystemLogger') log: SystemLogger
     ) {
         super();
         this.ctx = ctx;

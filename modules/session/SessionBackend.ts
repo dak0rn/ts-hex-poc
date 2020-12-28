@@ -82,7 +82,7 @@ export default abstract class SessionBackend {
     public static async getInstance(): Promise<SessionBackend> {
         if (!SessionBackend._instance) {
             const ac = ApplicationContext.getInstance();
-            const conf = ac.resolve('ApplicationConfiguration') as ApplicationConfiguration;
+            const conf = ac.resolve('core.ApplicationConfiguration') as ApplicationConfiguration;
 
             let configuredBackend: string;
 

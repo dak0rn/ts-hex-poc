@@ -25,7 +25,10 @@ export class FrontController extends CoreObject {
     protected log: SystemLogger;
     protected middlewares: Function[];
 
-    constructor(@inject('SystemLogger') log: SystemLogger, @inject('ApplicationContext') ctx: ApplicationContext) {
+    constructor(
+        @inject('core.SystemLogger') log: SystemLogger,
+        @inject('core.ApplicationContext') ctx: ApplicationContext
+    ) {
         super();
 
         this.log = log.createChild('HTTP');

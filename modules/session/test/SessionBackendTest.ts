@@ -53,7 +53,7 @@ test.serial('SessionBackend.getInstance throws if it cannot access session key',
     const ac = new ApplicationContext(container.createChildContainer());
     const conf = new ApplicationConfiguration({}, new StubAdapter());
 
-    ac.registerValue('ApplicationConfiguration', conf);
+    ac.registerValue('core.ApplicationConfiguration', conf);
 
     const sandbox = sinon.createSandbox();
     sandbox.stub(ApplicationContext, 'getInstance').returns(ac);
@@ -73,7 +73,7 @@ test.serial('SessionBackend.getInstance throws if no backend is configued', asyn
     const ac = new ApplicationContext(container.createChildContainer());
     const conf = new ApplicationConfiguration({ session: {} }, new StubAdapter());
 
-    ac.registerValue('ApplicationConfiguration', conf);
+    ac.registerValue('core.ApplicationConfiguration', conf);
 
     const sandbox = sinon.createSandbox();
     sandbox.stub(ApplicationContext, 'getInstance').returns(ac);
@@ -93,7 +93,7 @@ test.serial('SessionBackend.getInstance throws configured backend does not exist
     const ac = new ApplicationContext(container.createChildContainer());
     const conf = new ApplicationConfiguration({ session: { backend: 'banana!' } }, new StubAdapter());
 
-    ac.registerValue('ApplicationConfiguration', conf);
+    ac.registerValue('core.ApplicationConfiguration', conf);
 
     const sandbox = sinon.createSandbox();
     sandbox.stub(ApplicationContext, 'getInstance').returns(ac);
@@ -133,7 +133,7 @@ test.serial('SessionBackend.getInstance creates a new backend as configured', as
     const conf = new ApplicationConfiguration(baseConfig, new StubAdapter());
     const sandbox = sinon.createSandbox();
 
-    ac.registerValue('ApplicationConfiguration', conf);
+    ac.registerValue('core.ApplicationConfiguration', conf);
 
     availableBackends['banana'] = () => BananaBackend;
 
@@ -175,7 +175,7 @@ test.serial('SessionBackend.getInstance uses the singleton pattern', async t => 
     const conf = new ApplicationConfiguration(baseConfig, new StubAdapter());
     const sandbox = sinon.createSandbox();
 
-    ac.registerValue('ApplicationConfiguration', conf);
+    ac.registerValue('core.ApplicationConfiguration', conf);
 
     availableBackends['banana'] = () => BananaBackend;
 
@@ -221,7 +221,7 @@ test.serial('SessionBackend.getInstance resolves the backend in the ApplicationC
 
     const sandbox = sinon.createSandbox();
 
-    ac.registerValue('ApplicationConfiguration', conf);
+    ac.registerValue('core.ApplicationConfiguration', conf);
 
     availableBackends['banana'] = () => BananaBackend;
 
@@ -273,7 +273,7 @@ test.serial('SessionBackend.invokes the setup function', async t => {
     const conf = new ApplicationConfiguration(baseConfig, new StubAdapter());
     const sandbox = sinon.createSandbox();
 
-    ac.registerValue('ApplicationConfiguration', conf);
+    ac.registerValue('core.ApplicationConfiguration', conf);
 
     availableBackends['banana'] = () => BananaBackend;
 

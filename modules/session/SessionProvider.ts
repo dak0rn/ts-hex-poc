@@ -7,7 +7,7 @@ import SessionBackend from './SessionBackend';
 export default class SessionProvider implements ApplicationModuleLauncher {
     protected ctx: ApplicationContext;
 
-    constructor(@inject('ApplicationContext') ctx: ApplicationContext) {
+    constructor(@inject('core.ApplicationContext') ctx: ApplicationContext) {
         this.ctx = ctx;
     }
 

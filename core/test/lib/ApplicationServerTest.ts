@@ -115,13 +115,13 @@ test('ApplicationServer.assemble correctly assembles the application context', t
 
     t.is(rSpy.callCount, 0);
 
-    t.is(rvSpy.getCall(0).firstArg, 'SystemConfiguration');
+    t.is(rvSpy.getCall(0).firstArg, 'core.SystemConfiguration');
     t.is(rvSpy.getCall(0).lastArg, stubSC);
 
-    t.is(rvSpy.getCall(1).firstArg, 'ApplicationConfiguration');
+    t.is(rvSpy.getCall(1).firstArg, 'core.ApplicationConfiguration');
     t.is(rvSpy.getCall(1).lastArg, stubAC);
 
-    t.is(rvSpy.getCall(2).firstArg, 'SystemLogger');
+    t.is(rvSpy.getCall(2).firstArg, 'core.SystemLogger');
     t.is(rvSpy.getCall(2).lastArg, stubLogger);
 });
 
@@ -277,7 +277,7 @@ test('ApplicationServer.launchModules constructs its own loader if not provided'
         registerValue(key: string, value: any): void {}
         register<T>(key: string, value: constructor<T>): void {}
         resolve(key: string): any {
-            if ('SystemConfiguration' === key) {
+            if ('core.SystemConfiguration' === key) {
                 // This will be used from ApplicationServer in order to create a ModuleLoader
                 t.pass();
                 return new StubSystemConfiguration();

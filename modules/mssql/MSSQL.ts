@@ -21,8 +21,8 @@ export default class MSSQL implements ApplicationModuleLauncher {
     protected isDEV: boolean;
 
     constructor(
-        @inject('SystemLogger') log: SystemLogger,
-        @inject('ApplicationContext') ac: ApplicationContext,
+        @inject('core.SystemLogger') log: SystemLogger,
+        @inject('core.ApplicationContext') ac: ApplicationContext,
         @inject('core.DEV') isDEV: boolean
     ) {
         this.log = log.createChild('MSSQL');
@@ -33,7 +33,7 @@ export default class MSSQL implements ApplicationModuleLauncher {
     public async launch(): Promise<unknown> {
         this.log.info('Starting up');
 
-        const conf = this.ctx.resolve('ApplicationConfiguration') as ApplicationConfiguration;
+        const conf = this.ctx.resolve('core.ApplicationConfiguration') as ApplicationConfiguration;
         let dbUrl: string;
 
         let connectionParams: Knex.StaticConnectionConfig;

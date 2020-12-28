@@ -54,7 +54,7 @@ export class TransactionManagerRegistry extends CoreObject {
     protected registry: Map<string, TransactionManager<any>>;
     protected defaultManager: string;
 
-    constructor(@inject('SystemConfiguration') sc: SystemConfiguration) {
+    constructor(@inject('core.SystemConfiguration') sc: SystemConfiguration) {
         super();
 
         this.registry = new Map<string, TransactionManager<any>>();

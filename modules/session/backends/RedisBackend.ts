@@ -27,8 +27,8 @@ export default class RedisBackend extends SessionBackend {
      * Creates a new RedisBackend
      */
     constructor(
-        @inject('ApplicationConfiguration') conf: ApplicationConfiguration,
-        @inject('SystemLogger') log: SystemLogger
+        @inject('core.ApplicationConfiguration') conf: ApplicationConfiguration,
+        @inject('core.SystemLogger') log: SystemLogger
     ) {
         super();
 
