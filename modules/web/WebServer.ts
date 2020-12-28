@@ -1,24 +1,47 @@
 import { injectable, inject } from '@core/ioc/Decorators';
 import SystemLogger from '@core/log/SystemLogger';
 import { ApplicationModuleLauncher } from '@core/module/Module';
+import express, { Express } from 'express';
+import { FrontController } from './lib/FrontController';
+import { MiddlewareRegistry, MultipleMiddlewaresWithSameOrderError } from './lib/MiddlewareRegistry';
 
 @injectable()
-export default class WebServer implements ApplicationModuleLauncher {
+export class WebServer implements ApplicationModuleLauncher {
     protected log: SystemLogger;
+    protected server: Express | null;
+    protected ctrl: FrontController;
 
-    constructor(@inject('SystemLogger') log: SystemLogger) {
-        this.log = log;
+    constructor(@inject('SystemLogger') log: SystemLogger, @inject('http.FrontController') ctrl: FrontController) {
+        this.log = log.createChild('HTTP');
+        this.server = null;
+        this.ctrl = ctrl;
     }
 
-    public prepare(): void {}
+    public prepare(): void {
+        this.validateMiddlewares();
+    }
 
-    public launch(): Promise<unknown> {
-        return new Promise(resolve => {
-            this.log.info('Starting the web server...');
+    protected validateMiddlewares() {
+        const table = new Map<number, string>();
 
-            setTimeout(() => {
-                this.log.info('Tearing down web server...');
-            }, 5000);
-        });
+        for (const mw of MiddlewareRegistry.getInstance().middlewares) {
+            // Two middlewares with the same order will yield an error
+            if (table.has(mw.order)) {
+                throw new MultipleMiddlewaresWithSameOrderError(mw.class.name, table.get(mw.order) as string);
+            }
+
+            table.set(mw.order, mw.class.name);
+        }
+    }
+
+    public async launch(): Promise<unknown> {
+        this.log.info('Starting the web server...');
+
+        this.server = express();
+
+        this.ctrl.setup(this.server);
+        this.server.listen(4000);
+
+        return;
     }
 }
