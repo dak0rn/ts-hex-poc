@@ -27,7 +27,7 @@ export default class ApplicationContext extends CoreObject {
             this.iocContainer = container;
         }
 
-        this.registerValue('ApplicationContext', this);
+        this.container.register('ApplicationContext', { useFactory: ApplicationContext.getInstance });
     }
 
     /**

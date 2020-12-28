@@ -19,17 +19,19 @@ test('ApplicationContext.constructor creates a new ApplicationContext with the r
     t.is(ac.container, tsyringContainer);
 });
 
-test('ApplicationContext.constructor registers itself within the IoC container', t => {
-    t.plan(2);
+test('ApplicationContext.constructor registers itself within the IoC container using a factory', t => {
+    t.plan(3);
+
+    const sandbox = sinon.createSandbox();
+    t.teardown(sandbox.restore.bind(sandbox));
+
+    const spy = sandbox.stub(tsyringContainer, 'register');
 
     const ac = new ApplicationContext(null);
 
-    t.is(ac.resolve('ApplicationContext'), ac);
-
-    const childAc = ac.createChildContext();
-
-    // The child context shadows the parent
-    t.is(childAc.resolve('ApplicationContext'), childAc);
+    t.is(spy.callCount, 1);
+    t.is(spy.firstCall.firstArg, 'ApplicationContext');
+    t.deepEqual(spy.firstCall.lastArg, { useFactory: ApplicationContext.getInstance });
 });
 
 test('ApplicationContext.createChildContext creates a new ApplicationContext with a child IoC container', t => {
