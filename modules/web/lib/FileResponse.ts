@@ -6,7 +6,7 @@ import { Readable } from 'stream';
  * A {@link FileResponse} was supposed to be sent to the
  * client even though no file body has been set
  */
-export class FileBodyNotSet extends Error {
+export class FileBodyNotSetError extends Error {
     constructor() {
         super('No file body has been set');
     }
@@ -101,12 +101,12 @@ export class FileResponse extends Response {
         return this;
     }
 
-    protected streamResponse(): void {
+    protected async streamResponse(): Promise<void> {
         this.guard();
 
         // It does not work if we do not have a body
         if (!this.fileBody) {
-            throw new FileBodyNotSet();
+            throw new FileBodyNotSetError();
         }
 
         // Set the header
