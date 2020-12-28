@@ -32,6 +32,7 @@ export class RedisProvider extends CoreObject implements ApplicationModuleLaunch
         const conn = new RedisProvider.redisClass(this.url);
         const adapter = new RedisAdapter(conn);
 
+        this.log.info('Connecting...');
         this.ctx.registerValue('redis.Connection', adapter);
 
         return;
