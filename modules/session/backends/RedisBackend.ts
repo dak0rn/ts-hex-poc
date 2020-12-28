@@ -32,7 +32,7 @@ export default class RedisBackend extends SessionBackend {
     ) {
         super();
 
-        this.log = log.createChild('REDIS');
+        this.log = log.createChild('SESSION/REDIS');
 
         const redisUrl = conf.get('session.redisUrl') as string;
 
