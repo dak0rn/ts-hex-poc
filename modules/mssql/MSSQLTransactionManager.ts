@@ -7,7 +7,7 @@ import Knex from 'knex';
  * Transaction manager for MSSQL transactions
  */
 export class MSSQLTransactionManager extends TransactionManager<Knex> {
-    protected readonly contextKey: string = 'MSSQLConnection';
+    protected readonly contextKey: string = 'mssql.Connection';
 
     public get type(): string {
         return 'mssql';
@@ -38,7 +38,8 @@ export class MSSQLTransactionManager extends TransactionManager<Knex> {
 
     public async rollback(error: TransactionError, db: Knex): Promise<void> {
         const trx = ApplicationContext.getInstance().resolve(this.contextKey) as Knex.Transaction;
-
+        console.log('Rolling back here');
+        
         await trx.rollback();
 
         this.reset(db);

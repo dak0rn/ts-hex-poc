@@ -1,4 +1,4 @@
-import SystemConfiguration from '@core/configuration/SystemConfiguration';
+import SystemConfiguration, { ExecutionEnvironment } from '@core/configuration/SystemConfiguration';
 import ApplicationContext from '@core/ioc/ApplicationContext';
 import SystemLogger from '@core/log/SystemLogger';
 import SystemLoggerFactory from '@core/log/SystemLoggerFactory';
@@ -69,6 +69,7 @@ export default class ApplicationServer extends CoreObject {
         this.ctx.registerValue('SystemConfiguration', sc);
         this.ctx.registerValue('ApplicationConfiguration', ac);
         this.ctx.registerValue('SystemLogger', log);
+        this.ctx.registerValue('core.DEV', sc.environment() === ExecutionEnvironment.Development)
 
         // The context is registered within itself under ApplicationContext automatically
     }

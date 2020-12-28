@@ -1,11 +1,11 @@
 import SystemLogger from '@core/log/SystemLogger';
 import { inject, injectable } from '@core/ioc/Decorators';
-import { BaseController } from './BaseController';
-import { GET, middleware, routePrefix } from './Decorators';
-import { JSONResponse } from './JSONResponse';
-import { Middleware, NextHandler } from './Middleware';
-import { Request } from './Request';
-import { Response } from './Response';
+import { BaseController } from '../modules/web/lib/BaseController';
+import { GET, middleware, routePrefix } from '../modules/web/lib/Decorators';
+import { JSONResponse } from '../modules/web/lib/JSONResponse';
+import { Middleware, NextHandler } from '../modules/web/lib/Middleware';
+import { Request } from '../modules/web/lib/Request';
+import { Response } from '../modules/web/lib/Response';
 import ApplicationContext from '@core/ioc/ApplicationContext';
 
 @middleware(1)
@@ -59,18 +59,10 @@ export class LogMiddleware extends Middleware {
 @routePrefix('/echo')
 @injectable()
 export class TestController extends BaseController {
-    protected something: number;
-
-    constructor(@inject('something') something: number) {
-        super();
-
-        this.something = something;
-    }
-
     @GET('/:message')
-    public echoMessage(req: Request, res: Response): Response {
+    public async echoMessage(req: Request, res: Response): Promise<Response> {
         const msg = req.params.get('message');
 
-        return new JSONResponse(res).status(201).body({ msg, fingerprint: this.something });
+        return new JSONResponse(res).status(201).body({ msg });
     }
 }

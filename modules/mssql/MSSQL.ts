@@ -4,6 +4,7 @@ import ApplicationContext from '@core/ioc/ApplicationContext';
 import { injectable, inject, threadLocalSingleton } from '@core/ioc/Decorators';
 import SystemLogger from '@core/log/SystemLogger';
 import { ApplicationModuleLauncher } from '@core/module/Module';
+import Knex from 'knex';
 import knex from 'knex';
 import { MSSQLTransactionManager } from './MSSQLTransactionManager';
 
@@ -17,10 +18,16 @@ export class DatabaseURLNotDefinedError extends Error {
 export default class MSSQL implements ApplicationModuleLauncher {
     protected log: SystemLogger;
     protected ctx: ApplicationContext;
+    protected isDEV: boolean;
 
-    constructor(@inject('SystemLogger') log: SystemLogger, @inject('ApplicationContext') ac: ApplicationContext) {
+    constructor(
+        @inject('SystemLogger') log: SystemLogger,
+        @inject('ApplicationContext') ac: ApplicationContext,
+        @inject('core.DEV') isDEV: boolean
+    ) {
         this.log = log.createChild('MSSQL');
         this.ctx = ac;
+        this.isDEV = isDEV;
     }
 
     public async launch(): Promise<unknown> {
@@ -28,6 +35,8 @@ export default class MSSQL implements ApplicationModuleLauncher {
 
         const conf = this.ctx.resolve('ApplicationConfiguration') as ApplicationConfiguration;
         let dbUrl: string;
+
+        let connectionParams: Knex.StaticConnectionConfig;
 
         try {
             dbUrl = conf.get('mssql.url') as string;
@@ -40,14 +49,34 @@ export default class MSSQL implements ApplicationModuleLauncher {
             throw new DatabaseURLNotDefinedError();
         }
 
+        try {
+            const u = new URL(dbUrl);
+
+            if (u.pathname.length <= 1) throw new Error('No database specified');
+
+            connectionParams = {
+                port: parseInt(u.port || '1433', 10),
+                password: u.password,
+                user: u.username,
+                server: u.hostname,
+                database: u.pathname.substr(1),
+                options: {
+                    enableArithAbort: true
+                }
+            };
+        } catch (e) {
+            throw e;
+        }
+
         const connection = knex({
             client: 'mssql',
-            connection: dbUrl
+            connection: connectionParams,
+            asyncStackTraces: this.isDEV
         });
 
         await this.verifyConnection(connection);
 
-        this.ctx.registerValue('MSSQLConnection', connection);
+        this.ctx.registerValue('mssql.Connection', connection);
 
         return;
     }
