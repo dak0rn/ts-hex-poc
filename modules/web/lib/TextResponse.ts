@@ -37,7 +37,7 @@ export class TextResponse extends Response {
         return this;
     }
 
-    protected streamResponse(): void {
+    protected async streamResponse(): Promise<void> {
         this.guard();
 
         this.res.type('text/plain');

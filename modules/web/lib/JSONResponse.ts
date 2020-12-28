@@ -12,7 +12,7 @@ export class JSONResponse extends Response {
      */
     protected _body: any;
 
-    constructor(res: ExpressResponse) {
+    constructor(res: ExpressResponse | Response) {
         super(res);
         this._body = null;
     }
@@ -29,7 +29,7 @@ export class JSONResponse extends Response {
         return this;
     }
 
-    protected streamResponse(): void {
+    protected async streamResponse(): Promise<void> {
         this.guard();
 
         const data = JSON.stringify(this._body);

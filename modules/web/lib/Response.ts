@@ -16,7 +16,7 @@ export class ResponseFrozenError extends Error {
  * This class is extended by specific response types (binary/json/...).
  *
  */
-export abstract class Response extends CoreObject {
+export class Response extends CoreObject {
     /**
      * The wrapped response
      */
@@ -34,16 +34,37 @@ export abstract class Response extends CoreObject {
     protected fileType: string | null;
 
     /**
-     * Creates a new {@link Response} with the wrapped
-     * response object from `express`.
+     * Creates a new {@link Response} wrapping the given response.
+     * Uses a request object from `express` internally, will use the
+     * wrapped response if a {@link Response} is given.
      *
-     * @param res Express response to wrap
+     * @param res Response to wrap
      */
-    constructor(res: ExpressResponse) {
+    constructor(res: ExpressResponse | Response) {
         super();
-        this.res = res;
+        this.res = res instanceof Response ? res.res : res;
         this.frozen = false;
         this.fileType = null;
+    }
+
+    /**
+     * Returns the status code, defaulting to 200, set by
+     * {@link #status}
+     */
+    public get statusCode(): number {
+        return this.res.statusCode;
+    }
+
+    /**
+     * Sets the status code of the response
+     *
+     * @param code Status to set
+     * @return this
+     */
+    public status(code: number): this {
+        this.guard();
+        this.res.status(code);
+        return this;
     }
 
     /**
@@ -123,21 +144,23 @@ export abstract class Response extends CoreObject {
     /**
      * Sends the response back to the client
      */
-    protected abstract streamResponse(): void;
+    protected async streamResponse(): Promise<void> {
+        throw new Error('Cannot send Response directly to the client, use a child class instead'); // TODO: Error class
+    }
 
     /**
      * Finalizes the response and sends it back to the client
      * Will set the response to being frozen and any method changing
      * state will throw.
      */
-    public finalizeAndSend(): void {
+    public async finalizeAndSend(): Promise<void> {
         this.guard();
 
         if (this.fileType) {
             this.res.type(this.fileType);
         }
 
-        this.streamResponse();
+        await this.streamResponse();
 
         this.frozen = true;
     }
