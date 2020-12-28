@@ -111,7 +111,7 @@ test('ApplicationServer.assemble correctly assembles the application context', t
     t.is(logSpy.callCount, 1);
     t.is(acSpy.callCount, 1);
 
-    t.is(rvSpy.callCount, 3);
+    t.is(rvSpy.callCount, 4);
 
     t.is(rSpy.callCount, 0);
 
