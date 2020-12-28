@@ -1,32 +1,65 @@
 import CoreObject from '@core/shared/CoreObject';
-import { Router } from 'express';
 
-// TODO: Comment
+export type HttpVerb = 'get' | 'put' | 'post' | 'delete' | 'head' | 'options';
+
+/**
+ * Declaration for entries in the {@link RouteRegistry}
+ */
 export interface RouteDeclaration {
-    verb: string;
+    /**
+     * HTTP verb to use
+     * This matches the registration function names in express.Router
+     */
+    verb: HttpVerb;
+
+    /**
+     * Request path to match
+     */
     path: string;
-    class: { new (...args: any[]): any };
+
+    /**
+     * Controller class constructor
+     * Must extend {@link BaseController}
+     */
+    class: Function;
+
+    /**
+     * Name of the method to use on the instance
+     */
     method: string;
 }
 
 /**
  * Registry for routes
- * The mapping is filled by the decorators provided
+ * The registry is filled by the decorators provided
  */
 export class RouteRegistry extends CoreObject {
-    // TODO: *List* of routes
+    /**
+     * List of registered routes
+     */
+    protected _routes: RouteDeclaration[];
 
     /* istanbul ignore next */
     protected constructor() {
         super();
+
+        this._routes = [];
     }
 
-    public compile(): Router {
-        const router = Router();
+    /**
+     * The routes registered in the registry
+     */
+    public get routes(): RouteDeclaration[] {
+        return this._routes;
+    }
 
-        // TODO: Register handler function that uses the list of endpoints to create the controllers
-
-        return router;
+    /**
+     * Registers the given declration in the registry
+     *
+     * @param decl Declaration to register
+     */
+    public register(decl: RouteDeclaration): void {
+        this._routes.push(decl);
     }
 
     /**
