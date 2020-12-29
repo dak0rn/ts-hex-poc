@@ -4,7 +4,7 @@
   "description": "PoC for a hexagonal architecture with TypeScript",
   "main": "index.ts",
   "scripts": {
-    "test:unit": "ava --config ava.config.js",
+    "test:unit": "ava --config ava.config.js -s",
     "test:unit:watch": "ava --config ava.config.js --watch",
     "test:unit:coverage": "nyc ava --config ava.config.js",
     "start": "nodemon --exec ts-node --require tsconfig-paths/register core/boot.ts"
