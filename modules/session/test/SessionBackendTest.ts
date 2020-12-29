@@ -1,16 +1,17 @@
 import test from 'ava';
 import sinon from 'sinon';
 import { container } from 'tsyringe';
-import ApplicationContext from '@core/ioc/ApplicationContext';
-import ApplicationConfiguration from '@core/configuration/ApplicationConfiguration';
-import ConfigurationAdapter from '@core/configuration/ConfigurationAdapter';
-import SystemConfiguration from '@core/configuration/SystemConfiguration';
-import SessionBackend, {
+import { ApplicationContext } from '@core/ioc/ApplicationContext';
+import { ApplicationConfiguration } from '@core/configuration/ApplicationConfiguration';
+import { ConfigurationAdapter } from '@core/configuration/ConfigurationAdapter';
+import { SystemConfiguration } from '@core/configuration/SystemConfiguration';
+import {
+    SessionBackend,
     availableBackends,
     SessionBackendNotConfiguredError,
     SessionBackendNotSupportedError
 } from '../SessionBackend';
-import BaseSession from '../BaseSession';
+import { BaseSession } from '../BaseSession';
 
 class StubAdapter extends ConfigurationAdapter {
     constructor() {

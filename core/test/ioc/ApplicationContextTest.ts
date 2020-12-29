@@ -1,8 +1,8 @@
 import test from 'ava';
-import ApplicationContext from '@core/ioc/ApplicationContext';
+import { ApplicationContext } from '@core/ioc/ApplicationContext';
 import { container as tsyringContainer } from 'tsyringe';
 import sinon from 'sinon';
-import ThreadLocal from '@core/lib/ThreadLocal';
+import { ThreadLocal } from '@core/lib/ThreadLocal';
 
 test('ApplicationContext.constructor creates a new ApplicationContext with the given DependencyContainer', t => {
     t.plan(1);

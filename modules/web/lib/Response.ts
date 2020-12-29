@@ -1,4 +1,4 @@
-import CoreObject from '@core/shared/CoreObject';
+import { CoreObject } from '@core/shared/CoreObject';
 import { Response as ExpressResponse, CookieOptions } from 'express';
 
 /**

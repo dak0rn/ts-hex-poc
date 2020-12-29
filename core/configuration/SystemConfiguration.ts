@@ -1,6 +1,6 @@
-import ConfigurationAdapter from './ConfigurationAdapter';
-import Configuration, { InvalidConfigurationException } from './Configuration';
-import Utils from '@core/shared/Utils';
+import { ConfigurationAdapter } from './ConfigurationAdapter';
+import { Configuration, InvalidConfigurationException } from './Configuration';
+import { Utils } from '@core/shared/Utils';
 import path from 'path';
 
 export interface RawConfiguration {
@@ -17,7 +17,7 @@ const validEnvironments = [ExecutionEnvironment.Production, ExecutionEnvironment
 /**
  * Provides access to the configuration for the application server
  */
-export default class SystemConfiguration extends Configuration {
+export class SystemConfiguration extends Configuration {
     private config: RawConfiguration;
 
     /**

@@ -9,7 +9,7 @@ export interface LogAdapter {
  * Logger class that use a provided {@link LogAdapter} to write
  * logs
  */
-export default class SystemLogger {
+export class SystemLogger {
     public adapter: LogAdapter;
 
     protected prefix: string | null = null;

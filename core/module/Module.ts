@@ -1,4 +1,4 @@
-import ApplicationContext from '@core/ioc/ApplicationContext';
+import { ApplicationContext } from '@core/ioc/ApplicationContext';
 
 /**
  * Interface of entry point for modules
@@ -32,7 +32,7 @@ export interface ApplicationModuleLauncher {
     prepare(): void;
 }
 
-export default class Module implements ApplicationModule {
+export class Module implements ApplicationModule {
     /**
      * Underlying module definition
      */

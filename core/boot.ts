@@ -2,7 +2,7 @@
  * @file Entry point for the application server framework
  */
 
-import ApplicationServer from './lib/ApplicationServer';
+import { ApplicationServer } from './lib/ApplicationServer';
 
 /**
  * Boots up the application server. Will create all necessary

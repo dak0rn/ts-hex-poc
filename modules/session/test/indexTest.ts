@@ -1,6 +1,6 @@
 import test from 'ava';
 import index from '../index';
-import SessionProvider from '../SessionProvider';
+import { SessionProvider } from '../SessionProvider';
 
 test('session.index returns SessionProvider', t => {
     t.plan(1);

@@ -1,6 +1,6 @@
 import { TransactionError } from '@core/io/datastores/TransactionError';
 import { TransactionManager } from '@core/io/datastores/TransactionManager';
-import ApplicationContext from '@core/ioc/ApplicationContext';
+import { ApplicationContext } from '@core/ioc/ApplicationContext';
 import Knex from 'knex';
 
 /**
@@ -39,7 +39,7 @@ export class MSSQLTransactionManager extends TransactionManager<Knex> {
     public async rollback(error: TransactionError, db: Knex): Promise<void> {
         const trx = ApplicationContext.getInstance().resolve(this.contextKey) as Knex.Transaction;
         console.log('Rolling back here');
-        
+
         await trx.rollback();
 
         this.reset(db);

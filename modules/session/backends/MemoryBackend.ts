@@ -1,10 +1,10 @@
-import BaseSession from '../BaseSession';
-import SessionBackend from '../SessionBackend';
+import { BaseSession } from '../BaseSession';
+import { SessionBackend } from '../SessionBackend';
 
 /**
  * Session backend that stores sessions in memory
  */
-export default class MemoryBackend extends SessionBackend {
+export class MemoryBackend extends SessionBackend {
     protected store: Map<string, string>;
 
     constructor() {

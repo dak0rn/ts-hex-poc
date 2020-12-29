@@ -1,6 +1,6 @@
-import SystemConfiguration from '@core/configuration/SystemConfiguration';
-import ApplicationContext from '@core/ioc/ApplicationContext';
-import CoreObject from '@core/shared/CoreObject';
+import { SystemConfiguration } from '@core/configuration/SystemConfiguration';
+import { ApplicationContext } from '@core/ioc/ApplicationContext';
+import { CoreObject } from '@core/shared/CoreObject';
 import { inject, injectable } from 'tsyringe';
 import { TransactionManager } from './TransactionManager';
 

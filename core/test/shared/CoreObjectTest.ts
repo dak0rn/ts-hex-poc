@@ -1,5 +1,5 @@
 import test from 'ava';
-import CoreObject from '@core/shared/CoreObject';
+import { CoreObject } from '@core/shared/CoreObject';
 
 test('CoreObject.toString returns [CoreObject]', t => {
     t.plan(1);

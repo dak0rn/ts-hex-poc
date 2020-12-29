@@ -1,4 +1,4 @@
-import SystemConfiguration from '@core/configuration/SystemConfiguration';
+import { SystemConfiguration } from '@core/configuration/SystemConfiguration';
 import { ProjectScanner } from '@core/lib/ProjectScanner';
 import test from 'ava';
 import glob from 'glob';

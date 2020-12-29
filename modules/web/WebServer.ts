@@ -1,5 +1,5 @@
 import { injectable, inject } from '@core/ioc/Decorators';
-import SystemLogger from '@core/log/SystemLogger';
+import { SystemLogger } from '@core/log/SystemLogger';
 import { ApplicationModuleLauncher } from '@core/module/Module';
 import express, { Express } from 'express';
 import { FrontController } from './lib/FrontController';

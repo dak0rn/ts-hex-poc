@@ -1,4 +1,4 @@
-import SystemConfiguration, { ExecutionEnvironment } from '@core/configuration/SystemConfiguration';
+import { SystemConfiguration, ExecutionEnvironment } from '@core/configuration/SystemConfiguration';
 import winston from 'winston';
 import { LogAdapter } from './SystemLogger';
 
@@ -8,7 +8,7 @@ export const defaultConfiguration = {
     transports: [new winston.transports.Console()]
 };
 
-export default class WinstonLogger implements LogAdapter {
+export class WinstonLogger implements LogAdapter {
     protected logger: winston.Logger;
 
     /**

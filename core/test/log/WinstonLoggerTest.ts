@@ -1,10 +1,10 @@
 import test from 'ava';
 import sinon from 'sinon';
 import winston from 'winston';
-import WinstonLogger, { defaultConfiguration } from '@core/log/WinstonLogger';
-import SystemConfiguration, { ExecutionEnvironment } from '@core/configuration/SystemConfiguration';
-import ConfigurationAdapter from '@core/configuration/ConfigurationAdapter';
-import ApplicationConfiguration from '@core/configuration/ApplicationConfiguration';
+import { WinstonLogger, defaultConfiguration } from '@core/log/WinstonLogger';
+import { SystemConfiguration, ExecutionEnvironment } from '@core/configuration/SystemConfiguration';
+import { ConfigurationAdapter } from '@core/configuration/ConfigurationAdapter';
+import { ApplicationConfiguration } from '@core/configuration/ApplicationConfiguration';
 
 class StubAdapter extends ConfigurationAdapter {
     system(): SystemConfiguration {

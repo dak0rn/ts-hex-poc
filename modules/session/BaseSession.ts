@@ -1,9 +1,9 @@
-import Serializable from '@core/io/Serializable';
+import { Serializable } from '@core/io/Serializable';
 
 /**
  * Base class for all sessions
  */
-export default abstract class BaseSession implements Serializable<string> {
+export abstract class BaseSession implements Serializable<string> {
     public abstract deserialize(input: string): void;
     public abstract serialize(): string;
 

@@ -1,6 +1,6 @@
 import test from 'ava';
-import ConfigurationFactory, { MissingAdapterException } from '@core/configuration/ConfigurationFactory';
-import IniAdapter from '@core/configuration/IniAdapter';
+import { ConfigurationFactory, MissingAdapterException } from '@core/configuration/ConfigurationFactory';
+import { IniAdapter } from '@core/configuration/IniAdapter';
 
 test('ConfigurationFactory.getInstance: returns a IniAdaptor for .ini files', t => {
     t.plan(1);

@@ -1,10 +1,10 @@
 import { ApplicationModuleLauncher } from '@core/module/Module';
 import { inject, injectable } from '@core/ioc/Decorators';
-import ApplicationContext from '@core/ioc/ApplicationContext';
-import ApplicationConfiguration from '@core/configuration/ApplicationConfiguration';
-import SystemLogger from '@core/log/SystemLogger';
+import { ApplicationContext } from '@core/ioc/ApplicationContext';
+import { ApplicationConfiguration } from '@core/configuration/ApplicationConfiguration';
+import { SystemLogger } from '@core/log/SystemLogger';
 import ioredis from 'ioredis';
-import CoreObject from '@core/shared/CoreObject';
+import { CoreObject } from '@core/shared/CoreObject';
 import { RedisAdapter } from './RedisAdapter';
 
 /**

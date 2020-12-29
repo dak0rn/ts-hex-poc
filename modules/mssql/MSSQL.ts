@@ -1,8 +1,8 @@
-import ApplicationConfiguration from '@core/configuration/ApplicationConfiguration';
+import { ApplicationConfiguration } from '@core/configuration/ApplicationConfiguration';
 import { TransactionManagerRegistry } from '@core/io/datastores/TransactionManagerRegistry';
-import ApplicationContext from '@core/ioc/ApplicationContext';
+import { ApplicationContext } from '@core/ioc/ApplicationContext';
 import { injectable, inject, threadLocalSingleton } from '@core/ioc/Decorators';
-import SystemLogger from '@core/log/SystemLogger';
+import { SystemLogger } from '@core/log/SystemLogger';
 import { ApplicationModuleLauncher } from '@core/module/Module';
 import Knex from 'knex';
 import knex from 'knex';
@@ -15,7 +15,7 @@ export class DatabaseURLNotDefinedError extends Error {
 }
 
 @injectable()
-export default class MSSQL implements ApplicationModuleLauncher {
+export class MSSQL implements ApplicationModuleLauncher {
     protected log: SystemLogger;
     protected ctx: ApplicationContext;
     protected isDEV: boolean;

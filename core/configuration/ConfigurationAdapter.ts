@@ -1,11 +1,11 @@
-import CoreObject from '@core/shared/CoreObject';
-import ApplicationConfiguration from './ApplicationConfiguration';
-import SystemConfiguration from './SystemConfiguration';
+import { CoreObject } from '@core/shared/CoreObject';
+import { ApplicationConfiguration } from './ApplicationConfiguration';
+import { SystemConfiguration } from './SystemConfiguration';
 
 /**
  * An abstract adapter for configuration parsing
  */
-export default abstract class ConfigurationAdapter extends CoreObject {
+export abstract class ConfigurationAdapter extends CoreObject {
     /**
      * URI if the resource to retrieve the configuration from
      */

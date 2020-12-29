@@ -1,7 +1,7 @@
 import test from 'ava';
 import sinon from 'sinon';
-import Module, { ApplicationModule, ApplicationModuleLauncher } from '@core/module/Module';
-import ApplicationContext from '@core/ioc/ApplicationContext';
+import { Module, ApplicationModule, ApplicationModuleLauncher } from '@core/module/Module';
+import { ApplicationContext } from '@core/ioc/ApplicationContext';
 import { constructor } from 'tsyringe/dist/typings/types';
 
 const DummyModule = {

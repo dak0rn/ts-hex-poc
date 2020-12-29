@@ -1,4 +1,4 @@
-import SystemLogger from '@core/log/SystemLogger';
+import { SystemLogger } from '@core/log/SystemLogger';
 import { inject, injectable } from '@core/ioc/Decorators';
 import { BaseController } from '../modules/web/lib/BaseController';
 import { GET, middleware, routePrefix } from '../modules/web/lib/Decorators';
@@ -6,7 +6,7 @@ import { JSONResponse } from '../modules/web/lib/JSONResponse';
 import { Middleware, NextHandler } from '../modules/web/lib/Middleware';
 import { Request } from '../modules/web/lib/Request';
 import { Response } from '../modules/web/lib/Response';
-import ApplicationContext from '@core/ioc/ApplicationContext';
+import { ApplicationContext } from '@core/ioc/ApplicationContext';
 
 @middleware(1)
 @injectable()

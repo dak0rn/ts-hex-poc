@@ -1,5 +1,5 @@
-import SystemConfiguration from '@core/configuration/SystemConfiguration';
-import CoreObject from '@core/shared/CoreObject';
+import { SystemConfiguration } from '@core/configuration/SystemConfiguration';
+import { CoreObject } from '@core/shared/CoreObject';
 import glob from 'glob';
 
 /**

@@ -1,5 +1,5 @@
-import SystemConfiguration from '@core/configuration/SystemConfiguration';
-import Module from './Module';
+import { SystemConfiguration } from '@core/configuration/SystemConfiguration';
+import { Module } from './Module';
 import path from 'path';
 import { ApplicationModule } from './Module';
 
@@ -15,7 +15,7 @@ export class ModuleLoadingFailedException extends Error {
  * A simple module loader that loads modules referenced by 'moduleFolder'
  * and 'modules[]' in the {@link SystemConfiguration}.
  */
-export default class ModuleLoader {
+export class ModuleLoader {
     /**
      * The module loader function
      * Defaults to require

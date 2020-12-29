@@ -1,6 +1,6 @@
 import test from 'ava';
-import BaseSession from '../../BaseSession';
-import MemoryBackend from '../../backends/MemoryBackend';
+import { BaseSession } from '../../BaseSession';
+import { MemoryBackend } from '../../backends/MemoryBackend';
 
 test('MemoryBackend.put stores in a Map in memory', t => {
     t.plan(1);

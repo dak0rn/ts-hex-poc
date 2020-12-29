@@ -1,6 +1,6 @@
-import CoreObject from '@core/shared/CoreObject';
-import ConfigurationAdapter from './ConfigurationAdapter';
-import IniAdapter from './IniAdapter';
+import { CoreObject } from '@core/shared/CoreObject';
+import { ConfigurationAdapter } from './ConfigurationAdapter';
+import { IniAdapter } from './IniAdapter';
 
 /**
  * An exception indicating that a given configuration resource cannot
@@ -15,7 +15,7 @@ export class MissingAdapterException extends Error {
 /**
  * Factory class for configuration adapters
  */
-export default class ConfigurationFactory extends CoreObject {
+export class ConfigurationFactory extends CoreObject {
     /* istanbul ignore next */
     private constructor() {
         super();

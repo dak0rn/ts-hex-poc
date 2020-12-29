@@ -1,4 +1,4 @@
-import CoreObject from '@core/shared/CoreObject';
+import { CoreObject } from '@core/shared/CoreObject';
 
 export type HttpVerb = 'get' | 'put' | 'post' | 'delete' | 'head' | 'options';
 

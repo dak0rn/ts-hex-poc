@@ -1,16 +1,16 @@
 import test from 'ava';
 import sinon from 'sinon';
-import ConfigurationFactory from '@core/configuration/ConfigurationFactory';
-import ApplicationServer, { CONFIG_FILE } from '@core/lib/ApplicationServer';
-import SystemConfiguration from '@core/configuration/SystemConfiguration';
-import ConfigurationAdapter from '@core/configuration/ConfigurationAdapter';
-import ApplicationConfiguration from '@core/configuration/ApplicationConfiguration';
-import SystemLogger, { LogAdapter } from '@core/log/SystemLogger';
-import SystemLoggerFactory from '@core/log/SystemLoggerFactory';
-import ApplicationContext from '@core/ioc/ApplicationContext';
+import { ConfigurationFactory } from '@core/configuration/ConfigurationFactory';
+import { ApplicationServer, CONFIG_FILE } from '@core/lib/ApplicationServer';
+import { SystemConfiguration } from '@core/configuration/SystemConfiguration';
+import { ConfigurationAdapter } from '@core/configuration/ConfigurationAdapter';
+import { ApplicationConfiguration } from '@core/configuration/ApplicationConfiguration';
+import { SystemLogger, LogAdapter } from '@core/log/SystemLogger';
+import { SystemLoggerFactory } from '@core/log/SystemLoggerFactory';
+import { ApplicationContext } from '@core/ioc/ApplicationContext';
 import { constructor } from 'tsyringe/dist/typings/types';
-import ModuleLoader from '@core/module/ModuleLoader';
-import Module, { ApplicationModule } from '@core/module/Module';
+import { ModuleLoader } from '@core/module/ModuleLoader';
+import { Module, ApplicationModule } from '@core/module/Module';
 import { ProjectScanner } from '@core/lib/ProjectScanner';
 
 class StubLogAdapter implements LogAdapter {

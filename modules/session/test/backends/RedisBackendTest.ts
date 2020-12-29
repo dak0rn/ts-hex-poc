@@ -1,8 +1,8 @@
 import test from 'ava';
-import BaseSession from '../../BaseSession';
-import RedisBackend from '../../backends/RedisBackend';
-import SystemLogger, { LogAdapter } from '@core/log/SystemLogger';
-import ApplicationConfiguration from '@core/configuration/ApplicationConfiguration';
+import { BaseSession } from '../../BaseSession';
+import { RedisBackend } from '../../backends/RedisBackend';
+import { SystemLogger, LogAdapter } from '@core/log/SystemLogger';
+import { ApplicationConfiguration } from '@core/configuration/ApplicationConfiguration';
 
 class StubAdapter implements LogAdapter {
     info(message: string, ...meta: any[]): void {}

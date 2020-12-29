@@ -1,6 +1,6 @@
-import ApplicationConfiguration from '@core/configuration/ApplicationConfiguration';
-import ApplicationContext from '@core/ioc/ApplicationContext';
-import BaseSession from './BaseSession';
+import { ApplicationConfiguration } from '@core/configuration/ApplicationConfiguration';
+import { ApplicationContext } from '@core/ioc/ApplicationContext';
+import { BaseSession } from './BaseSession';
 
 /**
  * Error indicating that no session backend was configured in the application configuration
@@ -36,15 +36,15 @@ export interface AvailableBackends {
  */
 /* istanbul ignore next */
 export const availableBackends: AvailableBackends = {
-    memory: () => require('./backends/MemoryBackend').default,
-    redis: () => require('./backends/RedisBackend').default
+    memory: () => require('./backends/MemoryBackend').MemoryBackend,
+    redis: () => require('./backends/RedisBackend').RedisBackend
 };
 
 /**
  * Base class for all session backends and factory class to
  * create the backend configured in the {@link ApplicationConfiguration}.
  */
-export default abstract class SessionBackend {
+export abstract class SessionBackend {
     protected static _instance: SessionBackend | null = null;
 
     /**

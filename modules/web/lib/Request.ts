@@ -1,4 +1,4 @@
-import CoreObject from '@core/shared/CoreObject';
+import { CoreObject } from '@core/shared/CoreObject';
 import type { Request as ExpressRequest } from 'express';
 
 export type PathParamName = string;

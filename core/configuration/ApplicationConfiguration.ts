@@ -1,6 +1,6 @@
-import ConfigurationAdapter from './ConfigurationAdapter';
-import Configuration from './Configuration';
-import Utils from '@core/shared/Utils';
+import { ConfigurationAdapter } from './ConfigurationAdapter';
+import { Configuration } from './Configuration';
+import { Utils } from '@core/shared/Utils';
 
 export interface RawConfiguration {
     [key: string]: any;
@@ -10,7 +10,7 @@ export interface RawConfiguration {
  * Provides access to non-system configuration items e.g. for
  * external modules
  */
-export default class ApplicationConfiguration extends Configuration {
+export class ApplicationConfiguration extends Configuration {
     private config: RawConfiguration;
 
     constructor(config: RawConfiguration, sourceAdapter: ConfigurationAdapter) {

@@ -1,11 +1,11 @@
-import SystemConfiguration, { ExecutionEnvironment } from '@core/configuration/SystemConfiguration';
-import ApplicationContext from '@core/ioc/ApplicationContext';
-import SystemLogger from '@core/log/SystemLogger';
-import SystemLoggerFactory from '@core/log/SystemLoggerFactory';
-import ModuleLoader from '@core/module/ModuleLoader';
-import CoreObject from '@core/shared/CoreObject';
+import { SystemConfiguration, ExecutionEnvironment } from '@core/configuration/SystemConfiguration';
+import { ApplicationContext } from '@core/ioc/ApplicationContext';
+import { SystemLogger } from '@core/log/SystemLogger';
+import { SystemLoggerFactory } from '@core/log/SystemLoggerFactory';
+import { ModuleLoader } from '@core/module/ModuleLoader';
+import { CoreObject } from '@core/shared/CoreObject';
 import path from 'path';
-import ConfigurationFactory from '../configuration/ConfigurationFactory';
+import { ConfigurationFactory } from '../configuration/ConfigurationFactory';
 import { ProjectScanner } from './ProjectScanner';
 
 // TODO: Replace with CLI options
@@ -19,7 +19,7 @@ export const CONFIG_FILE: string = path.resolve(APPLICATION_DIR, 'conf', 'app.in
  *
  * This class is a singleton.
  */
-export default class ApplicationServer extends CoreObject {
+export class ApplicationServer extends CoreObject {
     protected static instance: ApplicationServer | null = null;
 
     protected ctx: ApplicationContext | null;

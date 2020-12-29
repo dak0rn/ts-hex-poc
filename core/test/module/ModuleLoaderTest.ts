@@ -1,10 +1,10 @@
 import test from 'ava';
 import sinon from 'sinon';
-import ModuleLoader, { ModuleLoadingFailedException } from '@core/module/ModuleLoader';
-import ConfigurationAdapter from '@core/configuration/ConfigurationAdapter';
-import SystemConfiguration from '@core/configuration/SystemConfiguration';
-import ApplicationConfiguration from '@core/configuration/ApplicationConfiguration';
-import Module, { ApplicationModule } from '@core/module/Module';
+import { ModuleLoader, ModuleLoadingFailedException } from '@core/module/ModuleLoader';
+import { ConfigurationAdapter } from '@core/configuration/ConfigurationAdapter';
+import { SystemConfiguration } from '@core/configuration/SystemConfiguration';
+import { ApplicationConfiguration } from '@core/configuration/ApplicationConfiguration';
+import { Module, ApplicationModule } from '@core/module/Module';
 
 class StubAdapter extends ConfigurationAdapter {
     system(): SystemConfiguration {

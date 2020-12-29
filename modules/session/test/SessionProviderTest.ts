@@ -1,8 +1,8 @@
-import ApplicationContext from '@core/ioc/ApplicationContext';
+import { ApplicationContext } from '@core/ioc/ApplicationContext';
 import test from 'ava';
 import sinon from 'sinon';
-import SessionBackend from '../SessionBackend';
-import SessionProvider from '../SessionProvider';
+import { SessionBackend } from '../SessionBackend';
+import { SessionProvider } from '../SessionProvider';
 
 test('SessionProvider.constructor assigns the given context', t => {
     t.plan(1);

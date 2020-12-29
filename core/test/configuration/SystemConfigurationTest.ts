@@ -1,7 +1,7 @@
-import ApplicationConfiguration from '@core/configuration/ApplicationConfiguration';
+import { ApplicationConfiguration } from '@core/configuration/ApplicationConfiguration';
 import { InvalidConfigurationException } from '@core/configuration/Configuration';
-import ConfigurationAdapter from '@core/configuration/ConfigurationAdapter';
-import SystemConfiguration, { ExecutionEnvironment } from '@core/configuration/SystemConfiguration';
+import { ConfigurationAdapter } from '@core/configuration/ConfigurationAdapter';
+import { SystemConfiguration, ExecutionEnvironment } from '@core/configuration/SystemConfiguration';
 import test, { ExecutionContext } from 'ava';
 
 function validSystemConfiguration(): any {

@@ -1,7 +1,7 @@
 /**
  * Base class for all objects
  */
-export default class CoreObject {
+export class CoreObject {
     /**
      * Creates a new CoreObject
      */

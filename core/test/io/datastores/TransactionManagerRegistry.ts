@@ -1,4 +1,4 @@
-import SystemConfiguration from '@core/configuration/SystemConfiguration';
+import { SystemConfiguration } from '@core/configuration/SystemConfiguration';
 import { TransactionManager } from '@core/io/datastores/TransactionManager';
 import {
     DefaultTransactionManagerDoesNotExistError,
@@ -6,7 +6,7 @@ import {
     TransactionManagerDoesNotExistError,
     TransactionManagerRegistry
 } from '@core/io/datastores/TransactionManagerRegistry';
-import ApplicationContext from '@core/ioc/ApplicationContext';
+import { ApplicationContext } from '@core/ioc/ApplicationContext';
 import test from 'ava';
 import sinon from 'sinon';
 

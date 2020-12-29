@@ -1,8 +1,8 @@
-import ApplicationConfiguration from '@core/configuration/ApplicationConfiguration';
-import ConfigurationAdapter from '@core/configuration/ConfigurationAdapter';
-import SystemConfiguration from '@core/configuration/SystemConfiguration';
-import SystemLoggerFactory from '@core/log/SystemLoggerFactory';
-import WinstonLogger from '@core/log/WinstonLogger';
+import { ApplicationConfiguration } from '@core/configuration/ApplicationConfiguration';
+import { ConfigurationAdapter } from '@core/configuration/ConfigurationAdapter';
+import { SystemConfiguration } from '@core/configuration/SystemConfiguration';
+import { SystemLoggerFactory } from '@core/log/SystemLoggerFactory';
+import { WinstonLogger } from '@core/log/WinstonLogger';
 import test from 'ava';
 
 class StubAdapter extends ConfigurationAdapter {

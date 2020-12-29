@@ -1,6 +1,6 @@
-import ApplicationConfiguration from '@core/configuration/ApplicationConfiguration';
-import ConfigurationAdapter from '@core/configuration/ConfigurationAdapter';
-import SystemConfiguration from '@core/configuration/SystemConfiguration';
+import { ApplicationConfiguration } from '@core/configuration/ApplicationConfiguration';
+import { ConfigurationAdapter } from '@core/configuration/ConfigurationAdapter';
+import { SystemConfiguration } from '@core/configuration/SystemConfiguration';
 import test, { ExecutionContext } from 'ava';
 
 class StubAdapter extends ConfigurationAdapter {

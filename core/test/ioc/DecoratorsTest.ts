@@ -2,8 +2,8 @@ import test from 'ava';
 import sinon from 'sinon';
 import { provide, inject, injectable, provideFactory, threadLocalSingleton } from '@core/ioc/Decorators';
 import { inject as tsInject, injectable as tsInjectable } from 'tsyringe';
-import ApplicationContext from '@core/ioc/ApplicationContext';
-import ThreadLocal from '@core/lib/ThreadLocal';
+import { ApplicationContext } from '@core/ioc/ApplicationContext';
+import { ThreadLocal } from '@core/lib/ThreadLocal';
 
 test('Decorators.provide registers class under name provided', t => {
     t.plan(3);

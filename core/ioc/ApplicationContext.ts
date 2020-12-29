@@ -1,14 +1,14 @@
 import 'reflect-metadata';
 import { container as rootContainer, DependencyContainer, InjectionToken } from 'tsyringe';
 import { constructor } from 'tsyringe/dist/typings/types';
-import ThreadLocal from '@core/lib/ThreadLocal';
+import { ThreadLocal } from '@core/lib/ThreadLocal';
 import { threadLocalSingleton } from './Decorators';
-import CoreObject from '@core/shared/CoreObject';
+import { CoreObject } from '@core/shared/CoreObject';
 
 /**
  * Inversion of Control container for dependency injection
  */
-export default class ApplicationContext extends CoreObject {
+export class ApplicationContext extends CoreObject {
     protected iocContainer: DependencyContainer;
 
     /**

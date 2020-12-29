@@ -1,8 +1,8 @@
 import ioredis from 'ioredis';
-import BaseSession from '../BaseSession';
-import SessionBackend from '../SessionBackend';
-import ApplicationConfiguration from '@core/configuration/ApplicationConfiguration';
-import SystemLogger from '@core/log/SystemLogger';
+import { BaseSession } from '../BaseSession';
+import { SessionBackend } from '../SessionBackend';
+import { ApplicationConfiguration } from '@core/configuration/ApplicationConfiguration';
+import { SystemLogger } from '@core/log/SystemLogger';
 import { inject, injectable } from '@core/ioc/Decorators';
 
 export class RedisSessionBackendMisconfiguredError extends Error {}
@@ -17,7 +17,7 @@ export class RedisUnreachableError extends Error {
  * Session backend for redis
  */
 @injectable()
-export default class RedisBackend extends SessionBackend {
+export class RedisBackend extends SessionBackend {
     protected connection: ioredis.Redis;
     protected log: SystemLogger;
 

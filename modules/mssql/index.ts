@@ -1,4 +1,4 @@
-import MSSQL from './MSSQL';
+import { MSSQL } from './MSSQL';
 
 export default {
     getClass(): { new (...args: any[]): any } {

@@ -1,4 +1,4 @@
-import {RedisProvider} from './RedisProvider';
+import { RedisProvider } from './RedisProvider';
 
 export default {
     getClass(): { new (...args: any[]): any } {

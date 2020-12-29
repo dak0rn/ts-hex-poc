@@ -1,4 +1,4 @@
-import ApplicationServer from '@core/lib/ApplicationServer';
+import { ApplicationServer } from '@core/lib/ApplicationServer';
 import test from 'ava';
 import sinon from 'sinon';
 import { boot } from '@core/boot';

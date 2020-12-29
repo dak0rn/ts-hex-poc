@@ -2,7 +2,7 @@
  * Interface declaring methods for serializing and deserializing an object.
  * The type parameter `T` defines the serialization format.
  */
-export default interface Serializable<T> {
+export interface Serializable<T> {
     /**
      * Serializes the current object into type `T`
      *

@@ -1,4 +1,4 @@
-import ThreadLocal, { defaultStorage } from '@core/lib/ThreadLocal';
+import { ThreadLocal, defaultStorage } from '@core/lib/ThreadLocal';
 import test from 'ava';
 import { container, DependencyContainer } from 'tsyringe';
 import sinon from 'sinon';

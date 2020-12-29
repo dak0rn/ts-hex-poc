@@ -1,12 +1,12 @@
 import { inject, injectable, provide } from '@core/ioc/Decorators';
-import CoreObject from '@core/shared/CoreObject';
+import { CoreObject } from '@core/shared/CoreObject';
 import { Express, Request as ExpressRequest, Response as ExpressResponse } from 'express';
 import { RouteDeclaration, RouteRegistry } from './RouteRegistry';
 import { getRoutePrefix } from './Decorators';
-import SystemLogger from '@core/log/SystemLogger';
-import ApplicationContext from '@core/ioc/ApplicationContext';
+import { SystemLogger } from '@core/log/SystemLogger';
+import { ApplicationContext } from '@core/ioc/ApplicationContext';
 import { BaseController } from './BaseController';
-import ThreadLocal from '@core/lib/ThreadLocal';
+import { ThreadLocal } from '@core/lib/ThreadLocal';
 import { Request } from './Request';
 import { Response } from './Response';
 import { MiddlewareRegistry } from './MiddlewareRegistry';

@@ -1,4 +1,4 @@
-import CoreObject from '@core/shared/CoreObject';
+import { CoreObject } from '@core/shared/CoreObject';
 import ioredis from 'ioredis';
 
 /**

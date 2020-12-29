@@ -1,10 +1,10 @@
-import ApplicationContext from '@core/ioc/ApplicationContext';
+import { ApplicationContext } from '@core/ioc/ApplicationContext';
 import { inject, injectable } from '@core/ioc/Decorators';
 import { ApplicationModuleLauncher } from '@core/module/Module';
-import SessionBackend from './SessionBackend';
+import { SessionBackend } from './SessionBackend';
 
 @injectable()
-export default class SessionProvider implements ApplicationModuleLauncher {
+export class SessionProvider implements ApplicationModuleLauncher {
     protected ctx: ApplicationContext;
 
     constructor(@inject('core.ApplicationContext') ctx: ApplicationContext) {

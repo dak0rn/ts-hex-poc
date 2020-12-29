@@ -1,6 +1,6 @@
-import SystemConfiguration from '@core/configuration/SystemConfiguration';
-import SystemLogger from './SystemLogger';
-import WinstonLogger from './WinstonLogger';
+import { SystemConfiguration } from '@core/configuration/SystemConfiguration';
+import { SystemLogger } from './SystemLogger';
+import { WinstonLogger } from './WinstonLogger';
 
 /**
  * Indicates that the log type set in the configuration is unknown
@@ -14,7 +14,7 @@ export class UnknownLoggerException extends Error {
 /**
  * Factory class for {@link SystemLogger} creation
  */
-export default class SystemLoggerFactory {
+export class SystemLoggerFactory {
     /* istanbul ignore next */
     private constructor() {}
 

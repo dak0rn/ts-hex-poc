@@ -1,5 +1,5 @@
 import test from 'ava';
-import IniAdapter from '@core/configuration/IniAdapter';
+import { IniAdapter } from '@core/configuration/IniAdapter';
 import sinon from 'sinon';
 import fs from 'fs';
 import ini from 'ini';

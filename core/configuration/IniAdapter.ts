@@ -1,6 +1,6 @@
-import ConfigurationAdapter from './ConfigurationAdapter';
-import ApplicationConfiguration from './ApplicationConfiguration';
-import SystemConfiguration from './SystemConfiguration';
+import { ConfigurationAdapter } from './ConfigurationAdapter';
+import { ApplicationConfiguration } from './ApplicationConfiguration';
+import { SystemConfiguration } from './SystemConfiguration';
 import fs from 'fs';
 import ini from 'ini';
 
@@ -8,7 +8,7 @@ interface IniValues {
     [key: string]: any;
 }
 
-export default class IniAdapter extends ConfigurationAdapter {
+export class IniAdapter extends ConfigurationAdapter {
     private parsed: IniValues | null = null;
 
     /**
